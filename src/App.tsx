@@ -266,20 +266,8 @@ export default function App() {
 
 
 function AppContent() {
-  const { user: firebaseUser, loading } = useAuth();
   const [onboardingData, setOnboardingData] = useState<{ name: string; age: string } | null>(null);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="text-primary animate-spin" size={48} />
-      </div>
-    );
-  }
-
-  // if (!firebaseUser || !onboardingData) {
-  //   return <Onboarding onComplete={(data) => setOnboardingData(data)} />;
-  // }
 
   return (
     <BrowserRouter>
