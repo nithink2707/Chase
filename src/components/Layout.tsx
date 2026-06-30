@@ -14,7 +14,6 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { useAuth } from "../context/AuthContext";
 import {Intro} from "../App.tsx";
 
 interface LayoutProps {
@@ -29,7 +28,6 @@ const navItems = [
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
 
@@ -93,21 +91,8 @@ export default function Layout({ children }: LayoutProps) {
 
         <div className="p-4 mt-auto">
           <div className="flex items-center gap-3 p-3 bg-surface-container rounded-xl border border-outline-variant/30">
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant border border-outline-variant/50 shrink-0">
-               {user?.photoURL ? (
-                <img 
-                  src={user.photoURL} 
-                  alt={user.displayName || "User"}
-                  className="w-full h-full object-cover"
-                />
-               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-primary/20 text-primary uppercase font-bold">
-                  {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
-                </div>
-               )}
-            </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-white truncate font-display">{user?.displayName || "Elite User"}</p>
+              <p className="text-sm font-bold text-white truncate font-display">Elite User</p>
               <p className="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Pro Tier</p>
             </div>
           </div>
@@ -145,19 +130,6 @@ export default function Layout({ children }: LayoutProps) {
             <button className="p-2 text-on-surface-variant hover:text-white transition-colors">
               <Settings size={20} />
             </button>
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30 md:hidden">
-              {user?.photoURL ? (
-                <img 
-                  src={user.photoURL} 
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-primary/20 text-primary uppercase font-bold text-[10px]">
-                  {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
-                </div>
-              )}
-            </div>
           </div>
         </header>
 
