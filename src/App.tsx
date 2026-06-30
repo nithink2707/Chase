@@ -41,9 +41,9 @@ export function Intro() {
     
             </header>
         <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
-          <h1 className="text-lg font-black tracking-tighter text-white uppercase font-display">Universalizing Athleticism</h1>
+          <h1 className="text-lg font-black tracking-tighter text-white uppercase font-display px-30">Universalizing Athleticism.</h1>
        <button onClick={()=>navigate("/tournaments",{replace:true})} 
-       className="inline-flex items-center gap-2 bg-white text-background font-display font-bold px-8 py-3.5 rounded-lg hover:bg-primary transition-colors uppercase text-sm tracking-tight">
+       className="inline-flex items-center px-20 gap-2 bg-white text-background font-display font-bold px-8 py-3.5 rounded-lg hover:bg-primary transition-colors uppercase text-sm tracking-tight">
         Go To Dashboard
         </button>
      </div></div>);
