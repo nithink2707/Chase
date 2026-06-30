@@ -34,9 +34,7 @@ export function Intro() {
                   <Menu size={24} />
                 </button>
                 
-                <h1 className="text-lg font-black tracking-tighter text-white uppercase font-display">
-                   Chase
-                </h1>
+                <img src = "chasewhite.png" alt="Chase"></img>
               </div>
     
             </header>
