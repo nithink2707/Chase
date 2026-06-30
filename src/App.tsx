@@ -6,7 +6,6 @@ import Discovery from "./pages/Discovery";
 import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import Profile from "./pages/Profile";
-import { AuthProvider, useAuth } from "./context/AuthContext";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2,Menu,Search,Bell,Settings } from "lucide-react";
 
 export function Main() {
