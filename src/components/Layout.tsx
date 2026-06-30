@@ -35,13 +35,10 @@ export default function Layout({ children }: LayoutProps) {
     <div className="flex min-h-screen bg-background font-sans">
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-[#1A1A1A] border-r border-outline-variant/20 sticky top-0 h-screen z-40">
-        <div className="p-6 mb-8">
-          <Link to="/" className="text-xl font-black tracking-tighter text-white uppercase font-display">
-            Chase
-          </Link>
-          <p className="text-[10px] text-on-surface-variant uppercase tracking-[0.2em] mt-1 font-medium italic">
-            Elite Performance
-          </p>
+        <div className="p-6 mb-2  ">
+          <div className="flex justify-center">
+            <img src="/chasewhite.png" alt="Chase" className="h-7"/>
+          </div>
         </div>
 
         <nav className="flex-1 px-3 space-y-1">

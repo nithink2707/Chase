@@ -6,7 +6,16 @@ import Discovery from "./pages/Discovery";
 import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import Profile from "./pages/Profile";
-import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2,Menu,Search,Bell,Settings } from "lucide-react";
+import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, Bell, Settings, Instagram} from "lucide-react";
+
+function DiscordIcon({ size = 18, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.197.372.291a.077.077 0 0 1-.006.128 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.994a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.057c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z" />
+    </svg>
+  );
+}
+
 
 export function Main() {
   return (
@@ -22,29 +31,140 @@ export function Main() {
       </Layout>
   )
 
-
 }
 export function Intro() {
   const navigate = useNavigate();
   return (
-    <div>
-    <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
-              <div className="flex items-center gap-4 flex-1">
-                <button className="md:hidden text-on-surface">
-                  <Menu size={24} />
-                </button>
-                
-                <img src = "chasewhite.png" alt="Chase"></img>
-              </div>
-    
-            </header>
-        <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
-          <h1 className="text-lg font-black tracking-tighter text-white uppercase font-display px-30">Universalizing Athleticism.</h1>
-       <button onClick={()=>navigate("/tournaments",{replace:true})} 
-       className="inline-flex items-center px-20 gap-2 bg-white text-background font-display font-bold px-8 py-3.5 rounded-lg hover:bg-primary transition-colors uppercase text-sm tracking-tight">
-        Go To Dashboard
-        </button>
-     </div></div>);
+    <div className="bg-background min-h-screen overflow-hidden relative">
+      {/* Header */}
+      <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
+        <div className="flex items-center gap-4 flex-1">
+          <button className="md:hidden text-on-surface">
+            <Menu size={24} />
+          </button>
+          <img src="/chasewhite.png" alt="Chase" className="h-7 block mx-auto" />
+        </div>
+      </header>
+
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          animate={{ scale: [1, 1.4, 1], opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] bg-primary rounded-full blur-[140px]"
+        />
+        <motion.div
+          animate={{ scale: [1.3, 1, 1.3], opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          className="absolute bottom-[-15%] right-[-10%] w-[55%] h-[55%] bg-secondary rounded-full blur-[140px]"
+        />
+        <motion.div
+          animate={{ x: ["-100%", "200%"] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-primary/60 to-transparent rotate-12"
+        />
+      </div>
+
+      {/* Marquee strip */}
+      <div className="relative z-10 border-y border-outline-variant/20 overflow-hidden py-2 bg-surface-container/50 backdrop-blur-sm">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="flex w-max gap-8 whitespace-nowrap font-display font-bold text-xs uppercase tracking-[0.3em] text-on-surface-variant/60"
+        >
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex gap-8 shrink-0">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <span key={i} className="flex items-center gap-8">
+                  Train Hard <Trophy size={12} className="text-primary" /> Compete Harder <Sparkles size={12} className="text-secondary" /> Win More <Trophy size={12} className="text-primary" /> BE HAWTT <Sparkles size={12} className="text-secondary" />
+                </span>
+              ))}
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Hero */}
+      <div className="min-h-[calc(100vh-104px)] flex flex-col items-center justify-center p-6 relative z-10 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="space-y-3"
+        >
+          <span className="inline-block font-display text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
+            Welcome to the arena
+          </span>
+
+          <h1 className="font-display font-black uppercase leading-[0.85] tracking-tighter text-white text-[14vw] md:text-[8vw]">
+            <motion.span
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="block"
+            >
+              Universalizing
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="block italic bg-gradient-to-r from-primary via-white to-secondary bg-clip-text text-transparent"
+            >
+              Athleticism.
+            </motion.span>
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="text-on-surface-variant font-medium max-w-md mx-auto pt-4"
+          >
+            One platform. Every league. No limits.
+          </motion.p>
+        </motion.div>
+
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          whileHover={{ scale: 1.05, y: -4 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/tournaments", { replace: true })}
+          className="group relative mt-10 inline-flex items-center gap-3 bg-white text-background font-display font-bold px-10 py-4 rounded-full uppercase text-sm tracking-tight overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,255,255,0.25)]"
+        >
+          <span className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="relative z-10">Go To Dashboard</span>
+          <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300" />
+        </motion.button>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+          className="flex items-center gap-4 mt-8"
+        >
+          {[
+            { Icon: Instagram, href: "https://instagram.com/yourhandle", label: "Instagram" },
+          ].map(({ Icon, href, label }) => (
+            <motion.a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1, y: -3 }}
+              whileTap={{ scale: 0.92 }}
+              aria-label={label}
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container border border-white/10 text-on-surface-variant hover:text-white hover:border-primary/40 hover:bg-surface-container-high transition-colors"
+            >
+              <Icon size={18} />
+            </motion.a>
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  );
 }
 
 // Mock Onboarding Component
