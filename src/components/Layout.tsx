@@ -1,6 +1,6 @@
 import React,{useState} from "react";
+import { useNavigate } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
-import { BrowserRouter, Routes, Route, Navigate,useNavigate } from "react-router-dom";
 import { 
   Compass, 
   Trophy, 
@@ -14,7 +14,6 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import {Intro} from "../App.tsx";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -136,18 +135,40 @@ export default function Layout({ children }: LayoutProps) {
         </main>
       </div>
 
-      {/* Mobile Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#1A1A1A] border-t border-outline-variant/20 px-6 flex items-center justify-between z-40">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
-          return (
-            <Link key={item.path} to={item.path} className={cn("p-2", isActive ? "text-primary" : "text-on-surface-variant")}>
-              <Icon size={24} />
-            </Link>
-          );
-        })}
+{/* Mobile Nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-outline-variant/20 px-4 z-40">
+        <div className="flex items-center justify-around">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="flex flex-col items-center gap-1 py-3 px-3 relative"
+              >
+                {isActive && (
+                  <span className="absolute top-2 inset-x-1 h-[2px] rounded-full bg-primary" />
+                )}
+                <Icon size={22} className={isActive ? "text-primary" : "text-on-surface-variant"} />
+                <span className={`text-[10px] font-display font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-on-surface-variant"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+          <Link to="/profile" className="flex flex-col items-center gap-1 py-3 px-3 relative">
+            {location.pathname === "/profile" && (
+              <span className="absolute top-2 inset-x-1 h-[2px] rounded-full bg-primary" />
+            )}
+            <User size={22} className={location.pathname === "/profile" ? "text-primary" : "text-on-surface-variant"} />
+            <span className={`text-[10px] font-display font-bold uppercase tracking-wider ${location.pathname === "/profile" ? "text-white" : "text-on-surface-variant"}`}>
+              Profile
+            </span>
+          </Link>
+        </div>
       </nav>
-    </div>
+
+    </div>  
   );
 }

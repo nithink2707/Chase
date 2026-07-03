@@ -39,9 +39,6 @@ export function Intro() {
       {/* Header */}
       <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
         <div className="flex items-center gap-4 flex-1">
-          <button className="md:hidden text-on-surface">
-            <Menu size={24} />
-          </button>
           <img src="/chasewhite.png" alt="Chase" className="h-7 block mx-auto" />
         </div>
       </header>
@@ -95,8 +92,7 @@ export function Intro() {
           <span className="inline-block font-display text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
             Welcome to the arena
           </span>
-
-          <h1 className="font-display font-black uppercase leading-[0.85] tracking-tighter text-white text-[14vw] md:text-[8vw]">
+            <h1 className="font-display font-black uppercase leading-[0.85] tracking-tighter text-white w-full px-4" style={{ fontSize: "clamp(2rem, 9vw, 7rem)" }}>
             <motion.span
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
@@ -146,7 +142,7 @@ export function Intro() {
           className="flex items-center gap-4 mt-8"
         >
           {[
-            { Icon: Instagram, href: "https://instagram.com/yourhandle", label: "Instagram" },
+            { Icon: Instagram, href: "https://www.instagram.com/chaseclub.in/", label: "Instagram" },
           ].map(({ Icon, href, label }) => (
             <motion.a
               key={label}
