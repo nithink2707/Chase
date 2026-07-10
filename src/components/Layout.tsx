@@ -117,7 +117,6 @@ export default function Layout({ children }: LayoutProps) {
                Chase
             </h1>
           </div>
-
           <div className="flex items-center gap-4">
             <button className="p-2 text-on-surface-variant hover:text-white transition-colors relative">
               <Bell size={20} />

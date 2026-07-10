@@ -6,15 +6,7 @@ import Discovery from "./pages/Discovery";
 import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import Profile from "./pages/Profile";
-import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, Bell, Settings, Instagram} from "lucide-react";
-
-function DiscordIcon({ size = 18, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.197.372.291a.077.077 0 0 1-.006.128 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.994a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.057c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z" />
-    </svg>
-  );
-}
+import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
 
 
 export function Main() {
@@ -34,12 +26,39 @@ export function Main() {
 }
 export function Intro() {
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [loginTab, setLoginTab] = useState<"Email" | "Phone">("Email");
+  const [loginInput, setLoginInput] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Replace this with your real Firebase Google login later
+ 
+  const handleGoogleLogin = () => {
+  setIsRedirecting(true);
+  setTimeout(() => {
+    setIsLoggedIn(true);
+    setShowLogin(false);
+    setIsRedirecting(false);
+    navigate("/tournaments", { replace: true });
+  }, 2200); // matches the progress bar duration
+};
+
+  const handleDashboardClick = () => {
+    if (isLoggedIn) {
+      navigate("/tournaments", { replace: true });
+    } else {
+      setShowLogin(true);
+    }
+  };
+
   return (
     <div className="bg-background min-h-screen overflow-hidden relative">
       {/* Header */}
       <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
         <div className="flex items-center gap-4 flex-1">
-          <img src="/chasewhite.png" alt="Chase" className="h-7 block mx-auto" />
+          <img src="/chasewhite.png" alt="Chase" className="h-7" />
         </div>
       </header>
 
@@ -92,7 +111,10 @@ export function Intro() {
           <span className="inline-block font-display text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
             Welcome to the arena
           </span>
-            <h1 className="font-display font-black uppercase leading-[0.85] tracking-tighter text-white w-full px-4" style={{ fontSize: "clamp(2rem, 9vw, 7rem)" }}>
+          <h1
+            className="font-display font-black uppercase leading-[0.85] tracking-tighter text-white w-full px-4"
+            style={{ fontSize: "clamp(2rem, 9vw, 7rem)" }}
+          >
             <motion.span
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
@@ -110,7 +132,6 @@ export function Intro() {
               Athleticism.
             </motion.span>
           </h1>
-
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -127,11 +148,11 @@ export function Intro() {
           transition={{ delay: 0.8, duration: 0.6 }}
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.96 }}
-          onClick={() => navigate("/tournaments", { replace: true })}
+          onClick={handleDashboardClick}
           className="group relative mt-10 inline-flex items-center gap-3 bg-white text-background font-display font-bold px-10 py-4 rounded-full uppercase text-sm tracking-tight overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,255,255,0.25)]"
         >
           <span className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative z-10">Go To Dashboard</span>
+          <span className="relative z-10">Join the Community</span>
           <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300" />
         </motion.button>
 
@@ -142,7 +163,7 @@ export function Intro() {
           className="flex items-center gap-4 mt-8"
         >
           {[
-            { Icon: Instagram, href: "https://www.instagram.com/chaseclub.in/", label: "Instagram" },
+            { Icon: Instagram, href: "https://instagram.com/yourhandle", label: "Instagram" },
           ].map(({ Icon, href, label }) => (
             <motion.a
               key={label}
@@ -159,6 +180,179 @@ export function Intro() {
           ))}
         </motion.div>
       </div>
+
+      {/* Login Modal */}
+<AnimatePresence>
+  {showLogin && (
+    <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => !isRedirecting && setShowLogin(false)}
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+      />
+
+      {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
+      >
+        <div className="w-full max-w-sm bg-[#1A1A1A] rounded-2xl border border-outline-variant/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] p-8 pointer-events-auto relative overflow-hidden">
+
+          <AnimatePresence mode="wait">
+            {isRedirecting ? (
+              /* Redirect Animation */
+              <motion.div
+                key="redirecting"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center py-8 gap-6"
+              >
+                {/* Spinning ring */}
+                <div className="relative w-20 h-20">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary border-r-primary"
+                  />
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-2 rounded-full border-2 border-transparent border-t-secondary"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Trophy size={24} className="text-primary" />
+                  </div>
+                </div>
+
+                <div className="text-center space-y-1">
+                  <motion.p
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="font-display font-black uppercase tracking-widest text-white text-sm"
+                  >
+                    Entering the Arena
+                  </motion.p>
+                  <p className="text-on-surface-variant text-xs">Setting up your dashboard...</p>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full h-[2px] bg-surface-container rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 2, ease: "easeInOut" }}
+                    className="h-full bg-gradient-to-r from-primary via-secondary to-primary"
+                  />
+                </div>
+              </motion.div>
+
+            ) : (
+              /* Login Form */
+              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                {/* Close */}
+                <button
+                  onClick={() => setShowLogin(false)}
+                  className="absolute top-4 right-4 text-on-surface-variant hover:text-white transition-colors"
+                >
+                  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+
+                {/* Logo */}
+                <div className="flex justify-center mb-6">
+                  <img src="/chasewhite.png" alt="Chase" className="h-6" />
+                </div>
+
+                <h2 className="text-2xl font-black font-display text-white italic uppercase text-center mb-1">
+                  Join the Club
+                </h2>
+                <p className="text-on-surface-variant text-sm text-center mb-6">
+                  Your elite journey begins here.
+                </p>
+
+                {/* Tab Toggle */}
+                <div className="flex bg-surface-container rounded-xl p-1 mb-6">
+                  {["Email", "Phone"].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setLoginTab(tab as "Email" | "Phone")}
+                      className={`flex-1 py-2 rounded-lg text-xs font-display font-bold uppercase tracking-wider transition-all duration-200 ${
+                        loginTab === tab
+                          ? "bg-white text-background shadow"
+                          : "text-on-surface-variant hover:text-white"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={loginTab}
+                    initial={{ opacity: 0, x: loginTab === "Email" ? -10 : 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: loginTab === "Email" ? 10 : -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-3 mb-6"
+                  >
+                    {loginTab === "Email" ? (
+                      <>
+                        <input
+                          type="email"
+                          placeholder="your@email.com"
+                          value={loginInput}
+                          onChange={(e) => setLoginInput(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                        <input
+                          type="password"
+                          placeholder="Password"
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                      </>
+                    ) : (
+                      <input
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        value={loginInput}
+                        onChange={(e) => setLoginInput(e.target.value)}
+                        className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+
+                <button
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
+                >
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
+                  {loginTab === "Email" ? "Continue with Email" : "Send OTP"}
+                </button>
+
+                <p className="text-[10px] text-on-surface-variant/50 text-center mt-5 uppercase tracking-wider">
+                  By continuing you agree to our Terms & Privacy Policy
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+        </div>
+      </motion.div>
+    </>
+  )}
+</AnimatePresence>
     </div>
   );
 }
