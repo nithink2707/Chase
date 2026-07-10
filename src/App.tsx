@@ -5,25 +5,30 @@ import Layout from "./components/Layout";
 import Discovery from "./pages/Discovery";
 import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
+import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
+
+
 
 
 export function Main() {
   return (
     <Layout>
-        <Routes>
-          <Route path="/tournaments/pro-league" element={<TournamentDetails />} />
-          <Route path="/teams" element={<TeamManagement />} />
-          <Route path="/activity" element={<Discovery />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-          <Route path="/tournaments" element={<Discovery />} />
+      <Routes>
+        <Route path="/tournaments/pro-league" element={<TournamentDetails />} />
+        <Route path="/tournaments" element={<Discovery />} />
+        <Route path="/teams" element={<TeamManagement />} />
+        <Route path="/activity" element={<Discovery />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/leaderboard/8ball" element={<EightBallLeaderboard />} />
+        <Route path="*" element={<Navigate to="/tournaments" replace />} />
       </Routes>
-      </Layout>
-  )
-
+    </Layout>
+  );
 }
+
+
 export function Intro() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);

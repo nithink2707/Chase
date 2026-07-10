@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   Compass, 
   Trophy, 
+  Target,
   Users, 
   Activity, 
   Bell, 
@@ -20,10 +21,12 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { icon: Trophy, label: "Tournaments", path: "/tournaments" },
-  { icon: Users, label: "Teams", path: "/teams" },
-  { icon: Activity, label: "Activity", path: "/activity" },
+  { icon: Trophy,  label: "Tournaments", path: "/tournaments" },
+  { icon: Target,  label: "Leaderboard", path: "/leaderboard/8ball" },
+  { icon: Users,   label: "Teams",       path: "/teams" },
+  { icon: Activity,label: "Activity",    path: "/activity" },
 ];
+
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
