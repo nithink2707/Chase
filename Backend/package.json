@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node Backend.js"
+  },
+  "dependencies": {
+    "express-session": "^1.19.0",
+    "express": "^5.2.1",
+    "cors": "^2.8.6"
+  }
+}
