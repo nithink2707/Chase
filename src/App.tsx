@@ -37,11 +37,24 @@ export function Intro() {
   const [loginTab, setLoginTab] = useState<"Email" | "Phone">("Email");
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  function handleLogin() {
+  async function handleLogin() {
       try {
 
-        const response = await fetch('')
+        const response = await fetch('https://chase-production-6a6f.up.railway.app/api/login',{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // needed if you're using cookies/sessions
+          body: JSON.stringify({loginInput,loginPassword})
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+        return (data.message || 'Login failed');
       }
+      }
+
+      catch (err) {return "error"}
   }
   // Replace this with your real Firebase Google login later
  
