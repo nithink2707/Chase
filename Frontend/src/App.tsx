@@ -8,7 +8,7 @@ import TeamManagement from "./pages/TeamManagement";
 import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
-
+const API_URL = "https://chase-l9no.onrender.com"
 
 
 
@@ -40,24 +40,23 @@ export function Intro() {
   async function handleLogin() {
       try {
 
-        const response = await fetch('https://chase-l9no.onrender.com/api/login',{
+        const response = await fetch(`${API_URL}/api/login`,{
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include', // needed if you're using cookies/sessions
           body: JSON.stringify({loginInput,loginPassword})
         })
 
-        const data = await response.json();
+        const data = await response.json().catch(() => null);
 
         if (!response.ok) {
-        return false;}
-
-        else {return true}
+        return false;
+      }
+      return true
       }
 
-      catch (err) {return "error"}
+      catch (err) {return false}
   }
-  // Replace this with your real Firebase Google login later
  
   const handleGoogleLogin = async () => {
   setIsRedirecting(true);
@@ -69,7 +68,7 @@ export function Intro() {
   } 
   else {
     setIsRedirecting(false)
-  }; // matches the progress bar duration
+  }; 
 };
 
   const handleDashboardClick = () => {

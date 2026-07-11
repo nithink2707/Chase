@@ -3,14 +3,26 @@ const session = require('express-session')
 const cors = require('cors')
 const app = express()
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
+    credentials: true,
+  })
+);
+
+
 app.use(express.json())
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized: false,
     cookie: {
-    httpOnly: true,     
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 1000 * 60 * 60
     }
 }));
@@ -22,14 +34,9 @@ app.get('/',(req,res) => {
 
 app.post('/api/login',async (req,res) => {
     const {loginInput,loginPassword} = req.body
-    if (loginInput=="chase@chaseclub.in") {
-        if (loginPassword=="chase") {
-            req.session.userId = loginInput
-            req.session.pass = loginPassword
-            res.json({user: {name:"chase",email:loginInput}})
-        }
-        else {
-        return res.status(400).json({message: 'Wrong credentials'});}
+    if (loginInput=="chase@chaseclub.in" && loginPassword=="chase") {
+        req.session.userId = loginInput;
+        return res.json({user: {name:"chase",email:loginInput}})
     }
     else {
         return res.status(400).json({message: 'Wrong credentials'});
