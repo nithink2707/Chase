@@ -5,11 +5,7 @@ const app = express()
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "https://chaseclub.netlify.app/",
-    ].filter(Boolean),
+    origin: true,
     credentials: true,
   })
 );
@@ -21,8 +17,9 @@ app.use(session({
     resave:false,
     saveUninitialized: false,
     cookie: {
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    httpOnly:true,
+    secure: true,
+    sameSite: "none",
     maxAge: 1000 * 60 * 60
     }
 }));
