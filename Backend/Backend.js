@@ -16,6 +16,11 @@ app.use(session({
     }
 }));
 
+app.route('/',(req,res) => {
+    return res.status(200).json({message:"Health check"})
+
+})
+
 app.post('/api/login',async (req,res) => {
     const {email,password} = req.body
     if (email=="chase@chaseclub.in") {
