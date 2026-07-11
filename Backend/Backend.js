@@ -28,6 +28,8 @@ app.post('/api/login',async (req,res) => {
             req.session.pass = loginPassword
             res.json({user: {name:"chase",email:loginInput}})
         }
+        else {
+        return res.status(400).json({message: 'Wrong credentials'});}
     }
     else {
         return res.status(400).json({message: 'Wrong credentials'});
