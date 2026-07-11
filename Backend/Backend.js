@@ -42,3 +42,5 @@ app.post('api/logout',(req,res) => {
         res.json({message:"Logged out"})
     })
 })
+
+app.listen(3000,() => {console.log("Listening on 3000")})
