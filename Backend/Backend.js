@@ -21,7 +21,7 @@ app.get('/',(req,res) => {
 })
 
 app.post('/api/login',async (req,res) => {
-    const {email,password} = req.body
+    const {loginInput,loginPassword} = req.body
     if (email=="chase@chaseclub.in") {
         if (password=="chase") {
             req.session.userId = email
