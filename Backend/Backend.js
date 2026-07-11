@@ -3,7 +3,6 @@ const session = require('express-session')
 const cors = require('cors')
 const app = express()
 
-
 app.use(express.json())
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -35,12 +34,12 @@ app.post('/api/login',async (req,res) => {
     }
 }) 
 
-app.post('api/logout',(req,res) => {
+app.post('/api/logout',(req,res) => {
     req.session.destroy((err)=> {
         if (err) return res.status(500).json({message:"Logout failed"})
         res.clearCookie('connect.sid')
         res.json({message:"Logged out"})
     })
 })
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
