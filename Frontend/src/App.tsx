@@ -40,7 +40,7 @@ export function Intro() {
   async function handleLogin() {
       try {
 
-        const response = await fetch('https://chase-production-6a6f.up.railway.app/api/login',{
+        const response = await fetch('https://chase-l9no.onrender.com/api/login',{
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include', // needed if you're using cookies/sessions
