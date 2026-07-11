@@ -50,8 +50,9 @@ export function Intro() {
         const data = await response.json();
 
         if (!response.ok) {
-        return (data.message || 'Login failed');
-      }
+        return false;}
+
+        else {return true}
       }
 
       catch (err) {return "error"}
