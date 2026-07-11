@@ -8,7 +8,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:5173",
-      process.env.FRONTEND_URL,
+      "https://chaseclub.netlify.app/",
     ].filter(Boolean),
     credentials: true,
   })
