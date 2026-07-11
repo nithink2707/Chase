@@ -58,15 +58,17 @@ export function Intro() {
   }
   // Replace this with your real Firebase Google login later
  
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
   setIsRedirecting(true);
-  handleLogin()
-  setTimeout(() => {
+  const isValid = await handleLogin()
+  if (isValid) {
     setIsLoggedIn(true);
     setShowLogin(false);
-    setIsRedirecting(false);
     navigate("/tournaments", { replace: true });
-  }, 2200); // matches the progress bar duration
+  } 
+  else {
+    setIsRedirecting(false)
+  }; // matches the progress bar duration
 };
 
   const handleDashboardClick = () => {
