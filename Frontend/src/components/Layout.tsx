@@ -15,6 +15,7 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import {handleLogout} from "../App"
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -79,7 +80,10 @@ export default function Layout({ children }: LayoutProps) {
               Profile
             </Link>
             <button
-              onClick={()=>navigate("/",{replace:true})}
+              onClick={async ()=>{
+                await handleLogout()
+                navigate("/",{replace:true})
+              }}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-display text-sm font-medium text-on-surface-variant hover:text-error hover:bg-error/10 mt-1 cursor-pointer"
             >
               <LogOut size={20} />

@@ -9,6 +9,26 @@ import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
 const API_URL = "https://chase-l9no.onrender.com"
+export async function handleLogout() {
+  try {
+
+        const response = await fetch(`${API_URL}/api/logout`,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // needed if you're using cookies/sessions
+        })
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+        return false;
+      }
+      return true
+      }
+
+      catch (err) {return false}
+
+}
 
 
 
@@ -37,6 +57,7 @@ export function Intro() {
   const [loginTab, setLoginTab] = useState<"Email" | "Phone">("Email");
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  
   async function handleLogin() {
       try {
 
@@ -57,6 +78,8 @@ export function Intro() {
 
       catch (err) {return false}
   }
+
+  
  
   const handleGoogleLogin = async () => {
   setIsRedirecting(true);
