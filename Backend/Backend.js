@@ -3,6 +3,14 @@ const session = require('express-session')
 const cors = require('cors')
 const app = express()
 
+function requireAuth(req,res,next) {
+    if (!req.session.userId) {
+        return res.status(401).json({message:"Not logged in"})
+    }
+    next();
+
+}
+
 app.use(
   cors({
     origin: true,
@@ -47,6 +55,10 @@ app.post('/api/logout',(req,res) => {
         console.log("logged out")
         res.json({message:"Logged out"})
     })
+})
+
+app.get('api/auth',requireAuth,(req,res) => {
+    res.json({id:req.session.userId, email:req.session.email})
 })
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
