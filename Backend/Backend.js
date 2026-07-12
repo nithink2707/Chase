@@ -57,7 +57,7 @@ app.post('/api/logout',(req,res) => {
     })
 })
 
-app.get('api/auth',requireAuth,(req,res) => {
+app.get('/api/auth',requireAuth,(req,res) => {
     res.json({id:req.session.userId, email:req.session.email})
 })
 const PORT = process.env.PORT || 8080;
