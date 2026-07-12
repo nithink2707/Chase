@@ -92,6 +92,11 @@ export function Intro() {
   const [loginTab, setLoginTab] = useState<"Email" | "Phone">("Email");
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [modalTab, setModalTab] = useState<"Login" | "Sign Up">("Login");
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPhone, setSignupPhone] = useState("");
+  const [signupAge, setSignupAge] = useState("");
   
   async function handleLogin() {
       try {
@@ -298,7 +303,6 @@ export function Intro() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-center justify-center py-8 gap-6"
               >
-                {/* Spinning ring */}
                 <div className="relative w-20 h-20">
                   <motion.div
                     animate={{ rotate: 360 }}
@@ -314,7 +318,6 @@ export function Intro() {
                     <Trophy size={24} className="text-primary" />
                   </div>
                 </div>
-
                 <div className="text-center space-y-1">
                   <motion.p
                     animate={{ opacity: [0.5, 1, 0.5] }}
@@ -325,8 +328,6 @@ export function Intro() {
                   </motion.p>
                   <p className="text-on-surface-variant text-xs">Setting up your dashboard...</p>
                 </div>
-
-                {/* Progress bar */}
                 <div className="w-full h-[2px] bg-surface-container rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: "0%" }}
@@ -338,8 +339,9 @@ export function Intro() {
               </motion.div>
 
             ) : (
-              /* Login Form */
+              /* Login / Signup Form */
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+
                 {/* Close */}
                 <button
                   onClick={() => setShowLogin(false)}
@@ -355,21 +357,18 @@ export function Intro() {
                   <img src="/chasewhite.png" alt="Chase" className="h-6" />
                 </div>
 
-                <h2 className="text-2xl font-black font-display text-white italic uppercase text-center mb-1">
-                  Join the Club
-                </h2>
-                <p className="text-on-surface-variant text-sm text-center mb-6">
-                  Your elite journey begins here.
-                </p>
-
-                {/* Tab Toggle */}
+                {/* Login / Signup Tab */}
                 <div className="flex bg-surface-container rounded-xl p-1 mb-6">
-                  {["Email", "Phone"].map((tab) => (
+                  {["Login", "Sign Up"].map((tab) => (
                     <button
                       key={tab}
-                      onClick={() => setLoginTab(tab as "Email" | "Phone")}
+                      onClick={() => {
+                        setModalTab(tab as "Login" | "Sign Up");
+                        setLoginInput("");
+                        setLoginPassword("");
+                      }}
                       className={`flex-1 py-2 rounded-lg text-xs font-display font-bold uppercase tracking-wider transition-all duration-200 ${
-                        loginTab === tab
+                        modalTab === tab
                           ? "bg-white text-background shadow"
                           : "text-on-surface-variant hover:text-white"
                       }`}
@@ -381,18 +380,19 @@ export function Intro() {
 
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={loginTab}
-                    initial={{ opacity: 0, x: loginTab === "Email" ? -10 : 10 }}
+                    key={modalTab}
+                    initial={{ opacity: 0, x: modalTab === "Login" ? -10 : 10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: loginTab === "Email" ? 10 : -10 }}
+                    exit={{ opacity: 0, x: modalTab === "Login" ? 10 : -10 }}
                     transition={{ duration: 0.2 }}
                     className="space-y-3 mb-6"
                   >
-                    {loginTab === "Email" ? (
+                    {modalTab === "Login" ? (
+                      /* ── LOGIN ── */
                       <>
                         <input
-                          type="email"
-                          placeholder="your@email.com"
+                          type="text"
+                          placeholder="Email or Phone number"
                           value={loginInput}
                           onChange={(e) => setLoginInput(e.target.value)}
                           className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
@@ -406,13 +406,44 @@ export function Intro() {
                         />
                       </>
                     ) : (
-                      <input
-                        type="tel"
-                        placeholder="+91 98765 43210"
-                        value={loginInput}
-                        onChange={(e) => setLoginInput(e.target.value)}
-                        className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
-                      />
+                      /* ── SIGN UP ── */
+                      <>
+                        <input
+                          type="text"
+                          placeholder="Full Name"
+                          value={signupName}
+                          onChange={(e) => setSignupName(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                        <input
+                          type="email"
+                          placeholder="your@email.com"
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                        <input
+                          type="tel"
+                          placeholder="+91 98765 43210"
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                        <input
+                          type="number"
+                          placeholder="Age"
+                          value={signupAge}
+                          onChange={(e) => setSignupAge(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <input
+                          type="password"
+                          placeholder="Password"
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        />
+                      </>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -422,7 +453,7 @@ export function Intro() {
                   className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
                 >
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  {loginTab === "Email" ? "Continue with Email" : "Send OTP"}
+                  {modalTab === "Login" ? "Continue" : "Create Account"}
                 </button>
 
                 <p className="text-[10px] text-on-surface-variant/50 text-center mt-5 uppercase tracking-wider">
@@ -431,7 +462,6 @@ export function Intro() {
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </motion.div>
     </>
