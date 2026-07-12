@@ -139,6 +139,7 @@ export function Intro() {
     await refetchAuth()
     setIsLoggedIn(true);
     setShowLogin(false);
+    setIsRedirecting(false);
     navigate("/tournaments", { replace: true });
   } 
   else {
