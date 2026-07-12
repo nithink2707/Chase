@@ -77,7 +77,7 @@ export function Main() {
         <Route path="/activity" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/leaderboard/8ball" element={<ProtectedRoute><EightBallLeaderboard /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/tournaments" replace />} />
       </Routes>
     </Layout>
   );
