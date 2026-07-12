@@ -8,7 +8,6 @@ import TeamManagement from "./pages/TeamManagement";
 import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
-import { ifNull } from "firebase/firestore/pipelines";
 const API_URL = "https://chase-l9no.onrender.com"
 const AuthContext = createContext();
 
@@ -445,7 +444,8 @@ export function Intro() {
 
 export default function App() {
   return (
-      <AppContent />
+    <AuthProvider><AppContent /></AuthProvider>
+      
     
   );
 }
