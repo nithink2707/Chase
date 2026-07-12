@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Trophy, RefreshCw, Search, ChevronDown, ChevronUp, Minus, X, GitCompare } from "lucide-react";
+import { Trophy, RefreshCw, Search, ChevronDown, ChevronUp, Minus, X, GitCompare, Clock, Calendar, Infinity } from "lucide-react";
 
 interface Player {
   id: string;
@@ -28,6 +28,16 @@ async function fetchLeaderboard(filter: "tournament" | "yearly" | "alltime"): Pr
     { id: "8",  rank: 8,  prev_rank: 7,  name: "Vikram Rao",      matches: 25, wins: 16, losses: 9,  win_rate: 64.0, Points: 128 },
     { id: "9",  rank: 9,  prev_rank: 11, name: "Meera Pillai",    matches: 22, wins: 14, losses: 8,  win_rate: 63.6, Points: 127 },
     { id: "10", rank: 10, prev_rank: 9,  name: "Aditya Bose",     matches: 24, wins: 15, losses: 9,  win_rate: 62.5, Points: 125 },
+    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 20, wins: 12, losses: 8,  win_rate: 60.0, Points: 118 },
+    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 18, wins: 10, losses: 8,  win_rate: 55.6, Points: 110 },
+    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 17, wins: 9,  losses: 8,  win_rate: 52.9, Points: 104 },
+    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 15, wins: 8,  losses: 7,  win_rate: 53.3, Points: 98  },
+    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 14, wins: 7,  losses: 7,  win_rate: 50.0, Points: 90  },
+    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 13, wins: 6,  losses: 7,  win_rate: 46.2, Points: 82  },
+    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 12, wins: 5,  losses: 7,  win_rate: 41.7, Points: 74  },
+    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 11, wins: 4,  losses: 7,  win_rate: 36.4, Points: 66  },
+    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 10, wins: 3,  losses: 7,  win_rate: 30.0, Points: 58  },
+    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 9,  wins: 2,  losses: 7,  win_rate: 22.2, Points: 50  },
   ];
 
   const yearly = [
@@ -41,6 +51,16 @@ async function fetchLeaderboard(filter: "tournament" | "yearly" | "alltime"): Pr
     { id: "8",  rank: 8,  prev_rank: 8,  name: "Vikram Rao",      matches: 65, wins: 40, losses: 25, win_rate: 61.5, Points: 258 },
     { id: "9",  rank: 9,  prev_rank: 10, name: "Meera Pillai",    matches: 60, wins: 36, losses: 24, win_rate: 60.0, Points: 242 },
     { id: "10", rank: 10, prev_rank: 9,  name: "Aditya Bose",     matches: 58, wins: 34, losses: 24, win_rate: 58.6, Points: 230 },
+    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 55, wins: 31, losses: 24, win_rate: 56.4, Points: 218 },
+    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 50, wins: 27, losses: 23, win_rate: 54.0, Points: 204 },
+    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 48, wins: 25, losses: 23, win_rate: 52.1, Points: 190 },
+    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 45, wins: 23, losses: 22, win_rate: 51.1, Points: 178 },
+    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 42, wins: 21, losses: 21, win_rate: 50.0, Points: 164 },
+    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 40, wins: 18, losses: 22, win_rate: 45.0, Points: 150 },
+    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 38, wins: 16, losses: 22, win_rate: 42.1, Points: 138 },
+    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 35, wins: 14, losses: 21, win_rate: 40.0, Points: 124 },
+    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 30, wins: 11, losses: 19, win_rate: 36.7, Points: 110 },
+    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 28, wins: 9,  losses: 19, win_rate: 32.1, Points: 96  },
   ];
 
   const alltime = [
@@ -54,6 +74,16 @@ async function fetchLeaderboard(filter: "tournament" | "yearly" | "alltime"): Pr
     { id: "8",  rank: 8,  prev_rank: 8,  name: "Vikram Rao",      matches: 220, wins: 143, losses: 77,  win_rate: 65.0, Points:  830 },
     { id: "9",  rank: 9,  prev_rank: 9,  name: "Meera Pillai",    matches: 200, wins: 126, losses: 74,  win_rate: 63.0, Points:  770 },
     { id: "10", rank: 10, prev_rank: 10, name: "Aditya Bose",     matches: 195, wins: 119, losses: 76,  win_rate: 61.0, Points:  730 },
+    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 185, wins: 110, losses: 75,  win_rate: 59.5, Points:  690 },
+    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 175, wins: 100, losses: 75,  win_rate: 57.1, Points:  645 },
+    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 160, wins: 90,  losses: 70,  win_rate: 56.3, Points:  600 },
+    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 150, wins: 82,  losses: 68,  win_rate: 54.7, Points:  558 },
+    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 140, wins: 74,  losses: 66,  win_rate: 52.9, Points:  514 },
+    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 130, wins: 65,  losses: 65,  win_rate: 50.0, Points:  470 },
+    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 120, wins: 56,  losses: 64,  win_rate: 46.7, Points:  424 },
+    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 110, wins: 47,  losses: 63,  win_rate: 42.7, Points:  378 },
+    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 100, wins: 38,  losses: 62,  win_rate: 38.0, Points:  330 },
+    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 90,  wins: 29,  losses: 61,  win_rate: 32.2, Points:  280 },
   ];
 
   return filter === "yearly" ? yearly : filter === "alltime" ? alltime : tournament;
@@ -71,7 +101,13 @@ function Trend({ curr, prev }: { curr: number; prev: number }) {
   return <Minus size={12} className="text-on-surface-variant" />;
 }
 
-const INITIAL_VISIBLE = 15;
+const INITIAL_VISIBLE = 10;
+
+const filterOptions = [
+  { value: "tournament" as const, label: "Season 1", sublabel: "Current", icon: Trophy },
+  { value: "yearly"    as const, label: "2026",      sublabel: "This Year", icon: Calendar },
+  { value: "alltime"   as const, label: "All Time",  sublabel: "History",   icon: Infinity },
+];
 
 export default function EightBallLeaderboard() {
   const [allPlayers, setAllPlayers]     = useState<Player[]>([]);
@@ -81,8 +117,8 @@ export default function EightBallLeaderboard() {
   const [search, setSearch]             = useState("");
   const [compareIds, setCompareIds]     = useState<string[]>([]);
   const [lastUpdated, setLastUpdated]   = useState<Date | null>(null);
-  const [timeFilter, setTimeFilter] = useState<"tournament" | "yearly" | "alltime">("tournament");
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [timeFilter, setTimeFilter]     = useState<"tournament" | "yearly" | "alltime">("tournament");
+  const [filterOpen, setFilterOpen]     = useState(false);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -91,11 +127,12 @@ export default function EightBallLeaderboard() {
       const data = await fetchLeaderboard(timeFilter);
       setAllPlayers(data);
       setLastUpdated(new Date());
+      setVisibleCount(INITIAL_VISIBLE); // reset on filter change
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [timeFilter]);
 
   useEffect(() => { load(); }, [timeFilter]);
 
@@ -116,6 +153,8 @@ export default function EightBallLeaderboard() {
     );
   };
   const compareData = allPlayers.filter((p) => compareIds.includes(p.id));
+
+  const activeFilter = filterOptions.find(f => f.value === timeFilter)!;
 
   if (loading) {
     return (
@@ -143,68 +182,85 @@ export default function EightBallLeaderboard() {
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-  <div className="flex items-center gap-3 mb-1">
-    <span className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-on-surface-variant">
-      Know the best, beat the rest
-    </span>
-  </div>
-  <div className="flex items-end justify-between">
-    <h1 className="text-3xl font-black font-display uppercase tracking-tighter text-white">
-      8-Ball Pool
-      <span className="block text-lg italic text-primary font-bold tracking-tight normal-case">
-        LEADERBOARD
-      </span>
-    </h1>
+        <div className="flex items-center gap-3 mb-1">
+          <span className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-on-surface-variant">
+            Know the best, beat the rest
+          </span>
+        </div>
+        <div className="flex items-end justify-between">
+          <h1 className="text-3xl font-black font-display uppercase tracking-tighter text-white">
+            8-Ball Pool
+            <span className="block text-lg italic text-primary font-bold tracking-tight normal-case">
+              LEADERBOARD
+            </span>
+          </h1>
 
-    {/* Filter dropdown */}
-    <div className="relative mb-1">
-      <button
-        onClick={() => setFilterOpen((o) => !o)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container border border-outline-variant/20 text-on-surface-variant hover:text-white hover:border-white/20 transition-colors font-display font-bold text-xs uppercase tracking-wider"
-      >
-        {{ season: "Season 1", yearly: "2026", alltime: "All Time" }[timeFilter]}
-        <ChevronDown size={12} className={`transition-transform duration-200 ${filterOpen ? "rotate-180" : ""}`} />
-      </button>
+          {/* ── COOL FILTER DROPDOWN ── */}
+          <div className="relative mb-1">
+            <button
+              onClick={() => setFilterOpen((o) => !o)}
+              className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-primary/40 hover:bg-surface-container-high transition-all duration-200"
+            >
+              <activeFilter.icon size={13} className="text-primary" />
+              <div className="text-left">
+                <p className="text-white font-display font-black text-xs uppercase tracking-wider leading-none">{activeFilter.label}</p>
+                <p className="text-on-surface-variant text-[9px] font-display uppercase tracking-wider leading-none mt-0.5">{activeFilter.sublabel}</p>
+              </div>
+              <ChevronDown
+                size={12}
+                className={`text-on-surface-variant transition-transform duration-200 ${filterOpen ? "rotate-180" : ""}`}
+              />
+            </button>
 
-      <AnimatePresence>
-        {filterOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.97 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 w-36 bg-surface-container-highest border border-outline-variant/20 rounded-xl overflow-hidden shadow-xl z-20"
-          >
-            {([ 
-              { value: "season",  label: "Season 1" },
-              { value: "yearly",  label: "2026"     },
-              { value: "alltime", label: "All Time"  },
-            ] as const).map(({ value, label }) => (
-              <button
-                key={value}
-                onClick={() => { setTimeFilter(value); setFilterOpen(false); }}
-                className={`w-full flex items-center justify-between px-4 py-3 text-xs font-display font-bold uppercase tracking-wider transition-colors ${
-                  timeFilter === value
-                    ? "text-white bg-primary/10"
-                    : "text-on-surface-variant hover:text-white hover:bg-surface-container"
-                }`}
-              >
-                {label}
-                {timeFilter === value && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
-              </button>
-            ))}
-          </motion.div>
+            <AnimatePresence>
+              {filterOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute right-0 top-full mt-2 w-44 bg-[#1A1A1A] border border-outline-variant/20 rounded-xl overflow-hidden shadow-[0_16px_40px_-8px_rgba(0,0,0,0.8)] z-20"
+                >
+                  <div className="px-3 pt-3 pb-1">
+                    <p className="text-[9px] font-display font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Time Period</p>
+                  </div>
+                  {filterOptions.map(({ value, label, sublabel, icon: Icon }) => (
+                    <button
+                      key={value}
+                      onClick={() => { setTimeFilter(value); setFilterOpen(false); }}
+                      className={`w-full flex items-center gap-3 px-3 py-3 transition-all duration-150 ${
+                        timeFilter === value
+                          ? "bg-primary/10 text-white"
+                          : "text-on-surface-variant hover:text-white hover:bg-surface-container"
+                      }`}
+                    >
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        timeFilter === value ? "bg-primary/20" : "bg-surface-container"
+                      }`}>
+                        <Icon size={13} className={timeFilter === value ? "text-primary" : "text-on-surface-variant"} />
+                      </div>
+                      <div className="text-left">
+                        <p className="font-display font-black text-xs uppercase tracking-wider leading-none">{label}</p>
+                        <p className="text-[9px] font-display uppercase tracking-wider leading-none mt-0.5 opacity-60">{sublabel}</p>
+                      </div>
+                      {timeFilter === value && (
+                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                  <div className="h-1" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {lastUpdated && (
+          <span className="text-[10px] text-on-surface-variant/50 font-display uppercase tracking-wider">
+            Updated {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </span>
         )}
-      </AnimatePresence>
-    </div>
-  </div>
-
-  {lastUpdated && (
-    <span className="text-[10px] text-on-surface-variant/50 font-display uppercase tracking-wider">
-      Updated {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-    </span>
-  )}
-</motion.div>
+      </motion.div>
 
       {/* Search bar */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4">
@@ -389,7 +445,7 @@ export default function EightBallLeaderboard() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
         className="rounded-xl border border-outline-variant/20 overflow-hidden mb-4">
 
-        {/* Header row — added Pts column */}
+        {/* Header row */}
         <div className="grid grid-cols-[2rem_1fr_4rem_3rem_3rem_5rem_3rem_2.5rem] gap-2 px-4 py-3 bg-surface-container-high border-b border-outline-variant/20">
           {["#", "Player", "Played", "W", "L", "Win %", "Pts", "±"].map((h) => (
             <span key={h} className="text-[10px] font-display font-black uppercase tracking-[0.15em] text-on-surface-variant">{h}</span>
@@ -455,7 +511,6 @@ export default function EightBallLeaderboard() {
                     <span className="text-[10px] font-display font-bold text-on-surface-variant w-7 shrink-0 text-right">{p.win_rate}%</span>
                   </div>
 
-                  {/* Points — now its own column */}
                   <span className="font-display font-bold text-sm text-secondary text-center">{p.Points}</span>
 
                   <div className="flex justify-center">
@@ -468,14 +523,16 @@ export default function EightBallLeaderboard() {
         </AnimatePresence>
       </motion.div>
 
+      {/* ── SHOW MORE BUTTON ── */}
       {hasMore && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center mb-4">
           <button
             onClick={() => setVisibleCount((c) => c + 10)}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-white hover:border-white/20 transition-colors font-display font-bold text-xs uppercase tracking-wider"
+            className="group flex items-center gap-2 px-6 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-white hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 font-display font-bold text-xs uppercase tracking-wider"
           >
-            <ChevronDown size={14} />
-            Show More ({filtered.length - visibleCount} remaining)
+            <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform duration-200" />
+            Show More
+            <span className="text-on-surface-variant/50 font-normal">({filtered.length - visibleCount} remaining)</span>
           </button>
         </motion.div>
       )}

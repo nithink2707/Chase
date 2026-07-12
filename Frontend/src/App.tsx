@@ -1,5 +1,5 @@
-import React, {createContext,useContext, useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate,useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import Layout from "./components/Layout";
 import Discovery from "./pages/Discovery";
@@ -7,89 +7,44 @@ import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
-import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
-const API_URL = "https://chase-l9no.onrender.com"
-const AuthContext = createContext();
+import { Trophy, ArrowRight, Sparkles, Instagram } from "lucide-react";
 
-export function AuthProvider({children}) {
-  const [user,setUser] = useState(null)
-  const [loading,setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/auth`,{credentials: 'include'})
-    .then(res => {
-      if (!res.ok) {throw new Error('Not logged in')}
-      return res.json()
-    })
-    .then(data => setUser(data))
-    .catch(()=> setUser(null))
-    .finally(() => setLoading(false))
-  },[])
-
-  return (
-  <AuthContext.Provider value={{user,setUser,loading}}>
-    {children}
-  </AuthContext.Provider>
-)
-}
-
-export const useAuth = () => useContext(AuthContext)
-
-function ProtectedRoute({children}) {
-  const {user,loading} = useAuth();
-  if (loading) return <p>Loading...</p>
-  if (!user) return <Navigate to="/" replace/>
-
-  return children
-}
-
+const API_URL = "https://chase-l9no.onrender.com";
 
 export async function handleLogout() {
   try {
-
-        const response = await fetch(`${API_URL}/api/logout`,{
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // needed if you're using cookies/sessions
-        })
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-        return false;
-      }
-      return true
-      }
-
-      catch (err) {return false}
-
+    const response = await fetch(`${API_URL}/api/logout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) return false;
+    return true;
+  } catch (err) { return false; }
 }
-
-
 
 export function Main() {
   return (
     <Layout>
       <Routes>
-        <Route path="/tournaments/pro-league" element={<ProtectedRoute><TournamentDetails /></ProtectedRoute>} />
-        <Route path="/tournaments" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />
-        <Route path="/teams" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
-        <Route path="/activity" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/leaderboard/8ball" element={<ProtectedRoute><EightBallLeaderboard /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/tournaments/pro-league" element={<TournamentDetails />} />
+        <Route path="/tournaments" element={<Discovery />} />
+        <Route path="/teams" element={<TeamManagement />} />
+        <Route path="/activity" element={<Discovery />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/leaderboard/8ball" element={<EightBallLeaderboard />} />
+        <Route path="*" element={<Navigate to="/tournaments" replace />} />
       </Routes>
     </Layout>
   );
 }
-
 
 export function Intro() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [loginTab, setLoginTab] = useState<"Email" | "Phone">("Email");
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [modalTab, setModalTab] = useState<"Login" | "Sign Up">("Login");
@@ -97,42 +52,30 @@ export function Intro() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
   const [signupAge, setSignupAge] = useState("");
-  
-  async function handleLogin() {
-      try {
 
-        const response = await fetch(`${API_URL}/api/login`,{
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // needed if you're using cookies/sessions
-          body: JSON.stringify({loginInput,loginPassword})
-        })
 
-        const data = await response.json().catch(() => null);
+    //  const handleGoogleLogin = async () => {
+    //   setIsRedirecting(true);
+    //   const isValid = await handleLogin()
+    //   if (isValid) {
+    //     setIsLoggedIn(true);
+    //     setShowLogin(false);
+    //     navigate("/tournaments", { replace: true });
+    //   } 
+    //   else {
+    //     setIsRedirecting(false)
+    //   }; 
+    // };
 
-        if (!response.ok) {
-        return false;
-      }
-      return true
-      }
 
-      catch (err) {return false}
-  }
-
-  
- 
   const handleGoogleLogin = async () => {
-  setIsRedirecting(true);
-  const isValid = await handleLogin()
-  if (isValid) {
-    setIsLoggedIn(true);
-    setShowLogin(false);
-    navigate("/tournaments", { replace: true });
-  } 
-  else {
-    setIsRedirecting(false)
-  }; 
-};
+    setIsRedirecting(true);
+    setTimeout(() => {
+      setIsLoggedIn(true);
+      setShowLogin(false);
+      navigate("/tournaments", { replace: true });
+    }, 2000);
+  };
 
   const handleDashboardClick = () => {
     if (isLoggedIn) {
@@ -271,228 +214,217 @@ export function Intro() {
       </div>
 
       {/* Login Modal */}
-<AnimatePresence>
-  {showLogin && (
-    <>
-      {/* Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => !isRedirecting && setShowLogin(false)}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
-      />
+      <AnimatePresence>
+        {showLogin && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !isRedirecting && setShowLogin(false)}
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            />
 
-      {/* Modal */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.92, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 20 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
-      >
-        <div className="w-full max-w-sm bg-[#1A1A1A] rounded-2xl border border-outline-variant/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] p-8 pointer-events-auto relative overflow-hidden">
-
-          <AnimatePresence mode="wait">
-            {isRedirecting ? (
-              /* Redirect Animation */
-              <motion.div
-                key="redirecting"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center py-8 gap-6"
-              >
-                <div className="relative w-20 h-20">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary border-r-primary"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-2 rounded-full border-2 border-transparent border-t-secondary"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Trophy size={24} className="text-primary" />
-                  </div>
-                </div>
-                <div className="text-center space-y-1">
-                  <motion.p
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="font-display font-black uppercase tracking-widest text-white text-sm"
-                  >
-                    Entering the Arena
-                  </motion.p>
-                  <p className="text-on-surface-variant text-xs">Setting up your dashboard...</p>
-                </div>
-                <div className="w-full h-[2px] bg-surface-container rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                    className="h-full bg-gradient-to-r from-primary via-secondary to-primary"
-                  />
-                </div>
-              </motion.div>
-
-            ) : (
-              /* Login / Signup Form */
-              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-
-                {/* Close */}
-                <button
-                  onClick={() => setShowLogin(false)}
-                  className="absolute top-4 right-4 text-on-surface-variant hover:text-white transition-colors"
-                >
-                  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path d="M18 6 6 18M6 6l12 12" />
-                  </svg>
-                </button>
-
-                {/* Logo */}
-                <div className="flex justify-center mb-6">
-                  <img src="/chasewhite.png" alt="Chase" className="h-6" />
-                </div>
-
-                {/* Login / Signup Tab */}
-                <div className="flex bg-surface-container rounded-xl p-1 mb-6">
-                  {["Login", "Sign Up"].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => {
-                        setModalTab(tab as "Login" | "Sign Up");
-                        setLoginInput("");
-                        setLoginPassword("");
-                      }}
-                      className={`flex-1 py-2 rounded-lg text-xs font-display font-bold uppercase tracking-wider transition-all duration-200 ${
-                        modalTab === tab
-                          ? "bg-white text-background shadow"
-                          : "text-on-surface-variant hover:text-white"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
+            >
+              <div className="w-full max-w-sm bg-[#1A1A1A] rounded-2xl border border-outline-variant/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] p-8 pointer-events-auto relative overflow-hidden">
 
                 <AnimatePresence mode="wait">
-                  <motion.div
-                    key={modalTab}
-                    initial={{ opacity: 0, x: modalTab === "Login" ? -10 : 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: modalTab === "Login" ? 10 : -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="space-y-3 mb-6"
-                  >
-                    {modalTab === "Login" ? (
-                      /* ── LOGIN ── */
-                      <>
-                        <input
-                          type="text"
-                          placeholder="Email or Phone number"
-                          value={loginInput}
-                          onChange={(e) => setLoginInput(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                  {isRedirecting ? (
+                    /* Redirect Animation */
+                    <motion.div
+                      key="redirecting"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex flex-col items-center justify-center py-8 gap-6"
+                    >
+                      <div className="relative w-20 h-20">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary border-r-primary"
                         />
-                        <input
-                          type="password"
-                          placeholder="Password"
-                          value={loginPassword}
-                          onChange={(e) => setLoginPassword(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        <motion.div
+                          animate={{ rotate: -360 }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                          className="absolute inset-2 rounded-full border-2 border-transparent border-t-secondary"
                         />
-                      </>
-                    ) : (
-                      /* ── SIGN UP ── */
-                      <>
-                        <input
-                          type="text"
-                          placeholder="Full Name"
-                          value={signupName}
-                          onChange={(e) => setSignupName(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Trophy size={24} className="text-primary" />
+                        </div>
+                      </div>
+                      <div className="text-center space-y-1">
+                        <motion.p
+                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                          className="font-display font-black uppercase tracking-widest text-white text-sm"
+                        >
+                          Entering the Arena
+                        </motion.p>
+                        <p className="text-on-surface-variant text-xs">Setting up your dashboard...</p>
+                      </div>
+                      <div className="w-full h-[2px] bg-surface-container rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: "0%" }}
+                          animate={{ width: "100%" }}
+                          transition={{ duration: 2, ease: "easeInOut" }}
+                          className="h-full bg-gradient-to-r from-primary via-secondary to-primary"
                         />
-                        <input
-                          type="email"
-                          placeholder="your@email.com"
-                          value={signupEmail}
-                          onChange={(e) => setSignupEmail(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
-                        />
-                        <input
-                          type="tel"
-                          placeholder="+91 98765 43210"
-                          value={signupPhone}
-                          onChange={(e) => setSignupPhone(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
-                        />
-                        <input
-                          type="number"
-                          placeholder="Age"
-                          value={signupAge}
-                          onChange={(e) => setSignupAge(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                        <input
-                          type="password"
-                          placeholder="Password"
-                          value={loginPassword}
-                          onChange={(e) => setLoginPassword(e.target.value)}
-                          className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
-                        />
-                      </>
-                    )}
-                  </motion.div>
+                      </div>
+                    </motion.div>
+
+                  ) : (
+                    /* Login / Signup Form */
+                    <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+
+                      {/* Close */}
+                      <button
+                        onClick={() => setShowLogin(false)}
+                        className="absolute top-4 right-4 text-on-surface-variant hover:text-white transition-colors"
+                      >
+                        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                          <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Logo */}
+                      <div className="flex justify-center mb-6">
+                        <img src="/chasewhite.png" alt="Chase" className="h-6" />
+                      </div>
+
+                      {/* Login / Signup Tab */}
+                      <div className="flex bg-surface-container rounded-xl p-1 mb-6">
+                        {["Login", "Sign Up"].map((tab) => (
+                          <button
+                            key={tab}
+                            onClick={() => {
+                              setModalTab(tab as "Login" | "Sign Up");
+                              setLoginInput("");
+                              setLoginPassword("");
+                            }}
+                            className={`flex-1 py-2 rounded-lg text-xs font-display font-bold uppercase tracking-wider transition-all duration-200 ${
+                              modalTab === tab
+                                ? "bg-white text-background shadow"
+                                : "text-on-surface-variant hover:text-white"
+                            }`}
+                          >
+                            {tab}
+                          </button>
+                        ))}
+                      </div>
+
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={modalTab}
+                          initial={{ opacity: 0, x: modalTab === "Login" ? -10 : 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: modalTab === "Login" ? 10 : -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="space-y-3 mb-6"
+                        >
+                          {modalTab === "Login" ? (
+                            /* ── LOGIN ── */
+                            <>
+                              <input
+                                type="text"
+                                placeholder="Email or Phone number"
+                                value={loginInput}
+                                onChange={(e) => setLoginInput(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                              <input
+                                type="password"
+                                placeholder="Password"
+                                value={loginPassword}
+                                onChange={(e) => setLoginPassword(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                            </>
+                          ) : (
+                            /* ── SIGN UP ── */
+                            <>
+                              <input
+                                type="text"
+                                placeholder="Full Name"
+                                value={signupName}
+                                onChange={(e) => setSignupName(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                              <input
+                                type="email"
+                                placeholder="your@email.com"
+                                value={signupEmail}
+                                onChange={(e) => setSignupEmail(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                              <input
+                                type="tel"
+                                placeholder="+91 98765 43210"
+                                value={signupPhone}
+                                onChange={(e) => setSignupPhone(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                              <input
+                                type="number"
+                                placeholder="Age"
+                                value={signupAge}
+                                onChange={(e) => setSignupAge(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                              <input
+                                type="password"
+                                placeholder="Password"
+                                value={loginPassword}
+                                onChange={(e) => setLoginPassword(e.target.value)}
+                                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/40 outline-none focus:border-primary/50 transition-colors font-sans"
+                              />
+                            </>
+                          )}
+                        </motion.div>
+                      </AnimatePresence>
+
+                      <button
+                        onClick={handleGoogleLogin}
+                        className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
+                      >
+                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
+                        {modalTab === "Login" ? "Continue" : "Create Account"}
+                      </button>
+
+                      <p className="text-[10px] text-on-surface-variant/50 text-center mt-5 uppercase tracking-wider">
+                        By continuing you agree to our Terms & Privacy Policy
+                      </p>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
-
-                <button
-                  onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
-                >
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  {modalTab === "Login" ? "Continue" : "Create Account"}
-                </button>
-
-                <p className="text-[10px] text-on-surface-variant/50 text-center mt-5 uppercase tracking-wider">
-                  By continuing you agree to our Terms & Privacy Policy
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-
 export default function App() {
-  return (
-    <AuthProvider><AppContent /></AuthProvider>
-      
-    
-  );
+  return <AppContent />;
 }
-
 
 function AppContent() {
-  const [onboardingData, setOnboardingData] = useState<{ name: string; age: string } | null>(null);
-
-
   return (
     <BrowserRouter>
-  <Routes>
-    <Route path="/" element={<Intro />} />
-    <Route path="/*" element={<Main />} />
-  </Routes>
-</BrowserRouter>
-  )
+      <Routes>
+        <Route path="/" element={<Intro />} />
+        <Route path="*" element={<Main />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-
