@@ -107,7 +107,7 @@ export function Intro() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
   const [signupAge, setSignupAge] = useState("");
-  const {refetchAuth} = useAuth()
+  const {setUser,refetchAuth} = useAuth()
   
   async function handleLogin() {
       try {
@@ -137,7 +137,8 @@ export function Intro() {
   const isValid = await handleLogin()
   console.log(isValid)
   if (isValid) {
-    await refetchAuth()
+    setUser({email: loginInput})
+    refetchAuth()
     console.log("Refetch done")
     setIsLoggedIn(true);
     setShowLogin(false);
