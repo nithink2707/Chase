@@ -134,13 +134,16 @@ export function Intro() {
   const handleGoogleLogin = async () => {
   setIsRedirecting(true);
   const isValid = await handleLogin()
+  console.log(isValid)
   if (isValid) {
     const {refetchAuth} = useAuth()
     await refetchAuth()
+    console.log("Refetch done")
     setIsLoggedIn(true);
     setShowLogin(false);
     setIsRedirecting(false);
     navigate("/tournaments", { replace: true });
+    console.log("navigated")
   } 
   else {
     setIsRedirecting(false)
