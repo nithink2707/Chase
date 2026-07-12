@@ -15,15 +15,25 @@ export function AuthProvider({children}) {
   const [user,setUser] = useState(null)
   const [loading,setLoading] = useState(true)
 
+  const refetchAuth = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/api/auth`, { credentials: 'include' })
+      if (res.ok) {
+        const data = await res.json()
+        setUser(data)
+      } else {
+        setUser(null)
+      }
+    } catch {
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    fetch(`${API_URL}/api/auth`,{credentials: 'include'})
-    .then(res => {
-      if (!res.ok) {throw new Error('Not logged in')}
-      return res.json()
-    })
-    .then(data => setUser(data))
-    .catch(()=> setUser(null))
-    .finally(() => setLoading(false))
+    refetchAuth()
   },[])
 
   return (
@@ -125,6 +135,8 @@ export function Intro() {
   setIsRedirecting(true);
   const isValid = await handleLogin()
   if (isValid) {
+    const {refetchAuth} = useAuth()
+    await refetchAuth()
     setIsLoggedIn(true);
     setShowLogin(false);
     navigate("/tournaments", { replace: true });
