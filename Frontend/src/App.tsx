@@ -103,30 +103,49 @@ export function Intro() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
   const [signupAge, setSignupAge] = useState("");
+  const {setUser,refetchAuth} = useAuth()
 
+  async function handleLogin() {
+      try {
 
-    //  const handleGoogleLogin = async () => {
-    //   setIsRedirecting(true);
-    //   const isValid = await handleLogin()
-    //   if (isValid) {
-    //     setIsLoggedIn(true);
-    //     setShowLogin(false);
-    //     navigate("/tournaments", { replace: true });
-    //   } 
-    //   else {
-    //     setIsRedirecting(false)
-    //   }; 
-    // };
+        const response = await fetch(`${API_URL}/api/login`,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // needed if you're using cookies/sessions
+          body: JSON.stringify({loginInput,loginPassword})
+        })
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+        return false;
+      }
+      return true
+      }
+
+      catch (err) {return false}
+  }
 
 
   const handleGoogleLogin = async () => {
-    setIsRedirecting(true);
-    setTimeout(() => {
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      navigate("/tournaments", { replace: true });
-    }, 2000);
-  };
+  setIsRedirecting(true);
+  const isValid = await handleLogin()
+  console.log(isValid)
+  if (isValid) {
+    setUser({email: loginInput})
+    refetchAuth()
+    await refetchAuth()
+    console.log("Refetch done")
+    setIsLoggedIn(true);
+    setShowLogin(false);
+    setIsRedirecting(false);
+    navigate("/tournaments", { replace: true });
+    console.log("navigated")
+  } 
+  else {
+    setIsRedirecting(false)
+  }; 
+};
 
   const handleDashboardClick = () => {
     if (isLoggedIn) {
