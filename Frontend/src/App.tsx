@@ -283,7 +283,7 @@ const createAccount = async () => {
           className="flex items-center gap-4 mt-8"
         >
           {[
-            { Icon: Instagram, href: "https://instagram.com/yourhandle", label: "Instagram" },
+            { Icon: Instagram, href: "https://www.instagram.com/chaseclub.in/", label: "Instagram" },
           ].map(({ Icon, href, label }) => (
             <motion.a
               key={label}
