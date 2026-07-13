@@ -53,8 +53,6 @@ function ProtectedRoute({children}) {
   return children
 }
 
-const API_URL = "https://chase-l9no.onrender.com";
-
 export async function handleLogout() {
   try {
     const response = await fetch(`${API_URL}/api/logout`, {
