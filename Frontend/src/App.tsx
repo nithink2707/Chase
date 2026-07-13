@@ -9,13 +9,8 @@ import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
 import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
 const API_URL = "https://chase-l9no.onrender.com"
-const AuthContext = createContext(undefined);
-const defaultAuthContext = {
-  user: null,
-  setUser: () => {},
-  loading: false,
-  refetchAuth: async () => {},
-};
+const AuthContext = createContext();
+
 
 export function AuthProvider({children}) {
   const [user,setUser] = useState(null)
@@ -51,7 +46,7 @@ export function AuthProvider({children}) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  return context ?? defaultAuthContext;
+  return context
 };
 
 function ProtectedRoute({children}) {
