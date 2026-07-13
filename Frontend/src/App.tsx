@@ -23,13 +23,17 @@ export function AuthProvider({children}) {
       if (res.ok) {
         const data = await res.json()
         setUser(data)
+        return true
       } else {
         setUser(null)
+        return false
       }
     } catch {
       setUser(null)
+      return false
     } finally {
       setLoading(false)
+      return false
     }
   }
 
