@@ -128,14 +128,16 @@ export function Intro() {
   console.log(isValid)
   if (isValid) {
     setUser({email: loginInput})
-    refetchAuth()
-    await refetchAuth()
-    console.log("Refetch done")
+    const authOk = await refetchAuth()
+    if (authOk) {
+      console.log("Refetch done")
     setIsLoggedIn(true);
     setShowLogin(false);
     setIsRedirecting(false);
     navigate("/tournaments", { replace: true });
     console.log("navigated")
+    }
+    
   } 
   else {
     setIsRedirecting(false)

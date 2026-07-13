@@ -11,6 +11,8 @@ function requireAuth(req,res,next) {
 
 }
 
+app.set("trust proxy",1);
+
 app.use(
   cors({
     origin: true,
@@ -26,8 +28,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
     httpOnly:true,
-    secure: true,
-    sameSite: "none",
+    secure: process.env.NODE_ENV ==="production",
+    sameSite: process.env.NODE_ENV ==="production"?"none":"lax",
     maxAge: 1000 * 60 * 60
     }
 }));
@@ -41,6 +43,7 @@ app.post('/api/login',async (req,res) => {
     const {loginInput,loginPassword} = req.body
     if (loginInput=="chase@chaseclub.in" && loginPassword=="chase") {
         req.session.userId = loginInput;
+        req.session.email = loginInput;
         return res.json({user: {name:"chase",email:loginInput}})
     }
     else {
