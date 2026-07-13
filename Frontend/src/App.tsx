@@ -92,7 +92,6 @@ export function Main() {
 export function Intro() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -101,10 +100,10 @@ export function Intro() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
   const [signupAge, setSignupAge] = useState("");
-  const {setUser,refetchAuth} = useAuth()
+  const {user,loading,setUser,refetchAuth} = useAuth()
 
   const handleDashboardClick = () => {
-    if (isLoggedIn) {
+    if (user) {
       navigate("/tournaments", { replace: true });
     } else {
       setShowLogin(true);
@@ -142,7 +141,6 @@ export function Intro() {
     const authOk = await refetchAuth()
     if (authOk) {
       console.log("Refetch done")
-    setIsLoggedIn(true);
     setShowLogin(false);
     setIsRedirecting(false);
     navigate("/tournaments", { replace: true });
