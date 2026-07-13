@@ -6,7 +6,7 @@ const app = express()
 const Pool = pg
 const connectstr = "postgresql://neondb_owner:npg_d28TmivnGqpA@ep-fancy-tree-aosw2xw9-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
-const Pool = new Pool({connectstr,});
+const pool = new Pool({connectstr,});
 
 
 function requireAuth(req,res,next) {
