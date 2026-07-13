@@ -33,7 +33,6 @@ export function AuthProvider({children}) {
       return false
     } finally {
       setLoading(false)
-      return false
     }
   }
 
