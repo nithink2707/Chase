@@ -1,7 +1,13 @@
 const express = require('express')
 const session = require('express-session')
 const cors = require('cors')
+import pg from 'pg'
 const app = express()
+const Pool = pg
+const connectstr = "postgresql://neondb_owner:npg_d28TmivnGqpA@ep-fancy-tree-aosw2xw9-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+const Pool = new Pool({connectstr,});
+
 
 function requireAuth(req,res,next) {
     if (!req.session.userId) {
@@ -62,6 +68,15 @@ app.post('/api/logout',(req,res) => {
 
 app.get('/api/auth',requireAuth,(req,res) => {
     res.json({id:req.session.userId, email:req.session.email})
+})
+
+app.post('/api/register',async (req,res) => {
+    const {signupName,signupEmail,signupPhone,signupAge,loginPassword} = req.body
+    await pool.connect()
+    await pool.query('INSERT INTO users(name,email,phone,password,age)',[signupName,signupEmail,signupPhone,loginPassword,signupAge]);
+    await pool.query('COMMIT');
+    await pool.end()
+
 })
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

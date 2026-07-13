@@ -153,6 +153,8 @@ export function Intro() {
   }; 
 };
 
+function createAccount() {}
+
 
   return (
     <div className="bg-background min-h-screen overflow-hidden relative">
@@ -461,7 +463,7 @@ export function Intro() {
                       </AnimatePresence>
 
                       <button
-                        onClick={handleGoogleLogin}
+                        onClick={modalTab === "Login" ? {handleGoogleLogin}: {createAccount}}
                         className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
                       >
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
