@@ -103,6 +103,14 @@ export function Intro() {
   const [signupAge, setSignupAge] = useState("");
   const {setUser,refetchAuth} = useAuth()
 
+  const handleDashboardClick = () => {
+    if (isLoggedIn) {
+      navigate("/tournaments", { replace: true });
+    } else {
+      setShowLogin(true);
+    }
+  };
+
   async function handleLogin() {
       try {
 
@@ -147,13 +155,6 @@ export function Intro() {
   }; 
 };
 
-  const handleDashboardClick = () => {
-    if (isLoggedIn) {
-      navigate("/tournaments", { replace: true });
-    } else {
-      setShowLogin(true);
-    }
-  };
 
   return (
     <div className="bg-background min-h-screen overflow-hidden relative">
