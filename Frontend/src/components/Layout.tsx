@@ -15,7 +15,7 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import {handleLogout} from "../App"
+import {handleLogout,useAuth} from "../App"
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -32,6 +32,7 @@ const navItems = [
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const {setUser} = useAuth()
 
 
   return (
@@ -82,6 +83,7 @@ export default function Layout({ children }: LayoutProps) {
             <button
               onClick={async ()=>{
                 await handleLogout()
+                setUser(null)
                 navigate("/",{replace:true})
               }}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-display text-sm font-medium text-on-surface-variant hover:text-error hover:bg-error/10 mt-1 cursor-pointer"
