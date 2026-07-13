@@ -1,9 +1,8 @@
 const express = require('express')
 const session = require('express-session')
 const cors = require('cors')
-const pg = require('pg')
+const {Pool} = require('pg')
 const app = express()
-const Pool = pg
 const connectstr = "postgresql://neondb_owner:npg_d28TmivnGqpA@ep-fancy-tree-aosw2xw9-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
 const pool = new Pool({connectstr,});
