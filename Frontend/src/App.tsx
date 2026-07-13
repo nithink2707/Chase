@@ -7,7 +7,51 @@ import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
-import { Trophy, ArrowRight, Sparkles, Instagram } from "lucide-react";
+import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
+const API_URL = "https://chase-l9no.onrender.com"
+const AuthContext = createContext();
+
+export function AuthProvider({children}) {
+  const [user,setUser] = useState(null)
+  const [loading,setLoading] = useState(true)
+
+  const refetchAuth = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/api/auth`, { credentials: 'include' })
+      if (res.ok) {
+        const data = await res.json()
+        setUser(data)
+      } else {
+        setUser(null)
+      }
+    } catch {
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    refetchAuth()
+  },[])
+
+  return (
+  <AuthContext.Provider value={{user,setUser,loading,refetchAuth}}>
+    {children}
+  </AuthContext.Provider>
+)
+}
+
+export const useAuth = () => useContext(AuthContext)
+
+function ProtectedRoute({children}) {
+  const {user,loading} = useAuth();
+  if (loading) return <p>Loading...</p>
+  if (!user) return <Navigate to="/" replace/>
+
+  return children
+}
 
 const API_URL = "https://chase-l9no.onrender.com";
 
@@ -28,12 +72,12 @@ export function Main() {
   return (
     <Layout>
       <Routes>
-        <Route path="/tournaments/pro-league" element={<TournamentDetails />} />
-        <Route path="/tournaments" element={<Discovery />} />
-        <Route path="/teams" element={<TeamManagement />} />
-        <Route path="/activity" element={<Discovery />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/leaderboard/8ball" element={<EightBallLeaderboard />} />
+        <Route path="/tournaments/pro-league" element={<ProtectedRoute><TournamentDetails /></ProtectedRoute>} />
+        <Route path="/tournaments" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />
+        <Route path="/teams" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
+        <Route path="/activity" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/leaderboard/8ball" element={<ProtectedRoute><EightBallLeaderboard /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/tournaments" replace />} />
       </Routes>
     </Layout>
