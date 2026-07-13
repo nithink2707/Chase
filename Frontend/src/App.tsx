@@ -153,7 +153,24 @@ export function Intro() {
   }; 
 };
 
-function createAccount() {}
+const createAccount = async () => {
+  setIsRedirecting(true)
+  const response = await fetch(`${API_URL}/api/register`,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // needed if you're using cookies/sessions
+          body: JSON.stringify({signupName,signupEmail,signupPhone,signupAge,loginPassword})
+        })
+  if (response.ok) {
+    console.log("User reigstered")
+  }
+  else {
+    console.log("Registration failed")
+  }
+  setIsRedirecting(false)
+}
+
+
 
 
   return (
@@ -463,7 +480,7 @@ function createAccount() {}
                       </AnimatePresence>
 
                       <button
-                        onClick={modalTab === "Login" ? {handleGoogleLogin}: {createAccount}}
+                        onClick={modalTab === "Login" ? handleGoogleLogin: createAccount}
                         className="w-full flex items-center justify-center gap-3 bg-white text-background font-display font-bold py-4 rounded-xl hover:bg-primary transition-all group cursor-pointer"
                       >
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />

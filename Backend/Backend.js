@@ -76,6 +76,7 @@ app.post('/api/register',async (req,res) => {
     await pool.query('INSERT INTO users(name,email,phone,password,age)',[signupName,signupEmail,signupPhone,loginPassword,signupAge]);
     await pool.query('COMMIT');
     await pool.end()
+    res.status(200).json({message:"User registered"});
 
 })
 const PORT = process.env.PORT || 8080;
