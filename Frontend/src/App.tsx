@@ -138,7 +138,7 @@ export function Intro() {
   console.log(isValid)
   if (isValid) {
     setUser({email: loginInput})
-    refetchAuth()
+    await refetchAuth()
     console.log("Refetch done")
     setIsLoggedIn(true);
     setShowLogin(false);
