@@ -72,7 +72,7 @@ app.get('/api/auth',requireAuth,(req,res) => {
 app.post('/api/register',async (req,res) => {
     const {signupName,signupEmail,signupPhone,signupAge,loginPassword} = req.body
     await pool.connect()
-    await pool.query('INSERT INTO users(name,email,phone,password,age)',[signupName,signupEmail,signupPhone,loginPassword,signupAge]);
+    await pool.query('INSERT INTO users(name,email,phone,password,age) VALUES ($1,$2,$3,$4,$5)',[signupName,signupEmail,signupPhone,loginPassword,signupAge]);
     await pool.query('COMMIT');
     await pool.end()
     res.status(200).json({message:"User registered"});
