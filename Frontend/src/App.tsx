@@ -163,6 +163,7 @@ const createAccount = async () => {
         })
   if (response.ok) {
     console.log("User reigstered")
+    setIsRedirecting(false)
   }
   else {
     console.log("Registration failed")
