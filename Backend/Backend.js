@@ -50,6 +50,7 @@ app.post('/api/login',async (req,res) => {
     const hashed = bcrypt.hash(loginPassword,12)
     const result = pool.query('SELECT * FROM users WHERE email= $1 AND password= $2',[loginInput,hashed]);
     if (result.rowCount!=0) {
+        console.log(result.rows);
         req.session.userId = result.rows[0];
         req.session.email = result.rows[1];
         return res.json({user: {name:result.rows[0],email:result.rows[1]}})
