@@ -50,9 +50,12 @@ app.post('/api/login',async (req,res) => {
     const result = await pool.query('SELECT * FROM users WHERE email= $1',[loginInput]);
     if (result.rowCount!=0) {
         const match = await bcrypt.compare(loginPassword,result.rows[3]);
+        if (match) {
         req.session.userId = result.rows[0];
         req.session.email = result.rows[1];
-        return res.json({user: {name:result.rows[0],email:result.rows[1]}})
+        return res.json({user: {name:result.rows[0],email:result.rows[1]}})}
+        else {
+        return res.status(400).json({message: 'Wrong credentials'});}
     }
     else {
         return res.status(400).json({message: 'Wrong credentials'});
