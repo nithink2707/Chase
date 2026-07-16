@@ -47,10 +47,12 @@ app.get('/',(req,res) => {
 
 app.post('/api/login',async (req,res) => {
     const {loginInput,loginPassword} = req.body
-    if (loginInput=="chase@chaseclub.in" && loginPassword=="chase") {
-        req.session.userId = loginInput;
-        req.session.email = loginInput;
-        return res.json({user: {name:"chase",email:loginInput}})
+    const hashed = bcrypt.hash(loginPassword,12)
+    const result = pool.query('SELECT * FROM users WHERE email= $1 AND password= $2',[loginInput,hashed]);
+    if (result.rowCount!=0) {
+        req.session.userId = result.rows[0];
+        req.session.email = result.rows[1];
+        return res.json({user: {name:result.rows[0],email:result.rows[1]}})
     }
     else {
         return res.status(400).json({message: 'Wrong credentials'});
