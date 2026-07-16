@@ -79,7 +79,7 @@ app.post('/api/register',async (req,res) => {
     await pool.query('INSERT INTO users(name,email,phone,password,age) VALUES ($1,$2,$3,$4,$5)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
     await pool.query('COMMIT');
     await pool.end()
-    res.status(200).json({message:"User registered"});
+    return res.status(200).json({message:"User registered"});
 
 })
 const PORT = process.env.PORT || 8080;
