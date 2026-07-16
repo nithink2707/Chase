@@ -75,10 +75,9 @@ app.get('/api/auth',requireAuth,(req,res) => {
 app.post('/api/register',async (req,res) => {
     const {signupName,signupEmail,signupPhone,signupAge,loginPassword} = req.body
     const hashedPassword = await bcrypt.hash(loginPassword,12);
-    await pool.connect()
+    const conn = await pool.connect()
     await pool.query('INSERT INTO users(name,email,phone,password,age) VALUES ($1,$2,$3,$4,$5)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
-    await pool.query('COMMIT');
-    await pool.end()
+    await conn.release()
     return res.status(200).json({message:"User registered"});
 
 })
