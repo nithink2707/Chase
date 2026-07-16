@@ -47,10 +47,9 @@ app.get('/',(req,res) => {
 
 app.post('/api/login',async (req,res) => {
     const {loginInput,loginPassword} = req.body
-    const hashed = bcrypt.hash(loginPassword,12)
-    const result = pool.query('SELECT * FROM users WHERE email= $1 AND password= $2',[loginInput,hashed]);
+    const result = await pool.query('SELECT * FROM users WHERE email= $1',[loginInput]);
     if (result.rowCount!=0) {
-        console.log(result.rows);
+        const match = await bcrypt.compare(loginPassword,result.rows[3]);
         req.session.userId = result.rows[0];
         req.session.email = result.rows[1];
         return res.json({user: {name:result.rows[0],email:result.rows[1]}})
