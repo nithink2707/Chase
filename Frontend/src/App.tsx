@@ -154,22 +154,33 @@ export function Intro() {
 };
 
 const createAccount = async () => {
-  setIsRedirecting(true)
-  const response = await fetch(`${API_URL}/api/register`,{
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // needed if you're using cookies/sessions
-          body: JSON.stringify({signupName,signupEmail,signupPhone,signupAge,loginPassword})
-        })
-  if (response.ok) {
-    console.log("User reigstered")
-    setIsRedirecting(false)
+  setIsRedirecting(true);
+
+  try {
+    const response = await fetch(`${API_URL}/api/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        signupName,
+        signupEmail,
+        signupPhone,
+        signupAge,
+        loginPassword,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Registration failed: ${response.status}`);
+    }
+
+    console.log("User registered");
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setIsRedirecting(false);
   }
-  else {
-    console.log("Registration failed")
-  }
-  setIsRedirecting(false)
-}
+};
 
 
 
