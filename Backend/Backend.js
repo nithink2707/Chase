@@ -80,7 +80,7 @@ app.post('/api/register',async (req,res) => {
     const {signupName,signupEmail,signupPhone,signupAge,loginPassword} = req.body
     const hashedPassword = await bcrypt.hash(loginPassword,12);
     const conn = await pool.connect()
-    await pool.query('INSERT INTO users(name,email,phone,password,age) VALUES ($1,$2,$3,$4,$5)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
+    await pool.query('INSERT INTO users(name,email,phone,password,age,rating) VALUES ($1,$2,$3,$4,$5,0)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
     await conn.release()
     return res.status(200).json({message:"User registered"});
 
@@ -88,7 +88,7 @@ app.post('/api/register',async (req,res) => {
 
 app.get('/api/players',async (req,res) => {
     const conn = await pool.connect()
-    const players = await pool.query('SELECT name FROM users');
+    const players = await pool.query('SELECT name,rating FROM users');
     await conn.release()
     return res.json(players.rows)
 })
