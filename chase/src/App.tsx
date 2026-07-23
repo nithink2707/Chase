@@ -331,18 +331,26 @@ if (step === "select") {
   );
 }
 
-  // ── Step 2: Live scoring ──
+ // ── Step 2: Live scoring ──
   if (step === "playing") {
     return (
       <div className="p-4 max-w-4xl mx-auto pb-24 md:pb-6">
-        <div className="flex items-center justify-between mb-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-slate-800 shadow-xl">
           <div>
-            <p className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-on-surface-variant">Live Match</p>
-            <h1 className="text-2xl font-display font-black text-white uppercase tracking-tighter">
-              {p1!.name} <span className="text-on-surface-variant text-lg">vs</span> {p2!.name}
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <p className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-amber-400">Live Match</p>
+            </div>
+            <h1 className="text-2xl font-display font-black text-white uppercase tracking-tight mt-0.5">
+              {p1!.name} <span className="text-slate-500 text-base font-normal lowercase mx-1">vs</span> {p2!.name}
             </h1>
           </div>
-          <button onClick={reset} className="text-on-surface-variant hover:text-white transition-colors">
+          <button 
+            onClick={reset} 
+            className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-all border border-slate-700/50"
+            title="Reset Match"
+          >
             <RotateCcw size={18} />
           </button>
         </div>
@@ -351,18 +359,18 @@ if (step === "select") {
         <div className="flex gap-4 mb-6">
           <ScorePanel player={p1!} score={scores[0]} onAction={(d, l) => handleAction(0, d, l)} disabled={submitting} />
 
-          <div className="flex flex-col items-center justify-center gap-2 px-2">
-            <div className="w-px flex-1 bg-outline-variant/20" />
-            <span className="font-display font-black text-on-surface-variant text-xs uppercase tracking-widest">vs</span>
-            <div className="w-px flex-1 bg-outline-variant/20" />
+          <div className="flex flex-col items-center justify-center gap-2 px-1">
+            <div className="w-px flex-1 bg-gradient-to-b from-transparent via-slate-700 to-transparent" />
+            <span className="font-display font-black text-slate-500 text-xs uppercase tracking-widest bg-slate-900 px-2 py-1 rounded border border-slate-800">VS</span>
+            <div className="w-px flex-1 bg-gradient-to-b from-transparent via-slate-700 to-transparent" />
           </div>
 
           <ScorePanel player={p2!} score={scores[1]} onAction={(d, l) => handleAction(1, d, l)} disabled={submitting} />
         </div>
 
         {error && (
-          <div className="mb-4 flex items-center gap-2 text-error text-sm font-display bg-error/10 px-4 py-3 rounded-xl border border-error/20">
-            <AlertTriangle size={14} /> {error}
+          <div className="mb-4 flex items-center gap-2 text-red-400 text-sm font-display bg-red-500/10 px-4 py-3 rounded-xl border border-red-500/20 backdrop-blur-sm">
+            <AlertTriangle size={16} className="shrink-0" /> {error}
           </div>
         )}
 
@@ -371,38 +379,39 @@ if (step === "select") {
           <button
             disabled={submitting}
             onClick={() => handleMatchEnd(0)}
-            className="flex items-center justify-center gap-2 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-display font-black uppercase tracking-wider text-sm transition-all disabled:opacity-50"
+            className="flex items-center justify-center gap-2 py-4 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-display font-black uppercase tracking-wider text-sm shadow-lg shadow-emerald-950/40 transition-all disabled:opacity-50 active:scale-[0.99]"
           >
-            <Trophy size={16} /> {p1!.name} Wins
+            <Trophy size={16} className="text-amber-300" /> {p1!.name} Wins
           </button>
           <button
             disabled={submitting}
             onClick={() => handleMatchEnd(1)}
-            className="flex items-center justify-center gap-2 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-display font-black uppercase tracking-wider text-sm transition-all disabled:opacity-50"
+            className="flex items-center justify-center gap-2 py-4 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-display font-black uppercase tracking-wider text-sm shadow-lg shadow-emerald-950/40 transition-all disabled:opacity-50 active:scale-[0.99]"
           >
-            <Trophy size={16} /> {p2!.name} Wins
+            <Trophy size={16} className="text-amber-300" /> {p2!.name} Wins
           </button>
         </div>
 
         {/* Action log */}
         {log.length > 0 && (
-          <div className="rounded-xl border border-outline-variant/20 overflow-hidden">
-            <div className="px-4 py-3 bg-surface-container-high border-b border-outline-variant/20">
-              <p className="text-[10px] font-display font-black uppercase tracking-widest text-on-surface-variant">Action Log</p>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-md overflow-hidden shadow-xl">
+            <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between">
+              <p className="text-[10px] font-display font-black uppercase tracking-widest text-slate-400">Action Log</p>
+              <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700/50">{log.length} Events</span>
             </div>
-            <div className="max-h-48 overflow-y-auto divide-y divide-outline-variant/10">
+            <div className="max-h-48 overflow-y-auto divide-y divide-slate-800/60 custom-scrollbar">
               {log.map((entry, i) => (
                 <motion.div
                   key={`${entry.player}-${entry.action}-${entry.delta}-${i}`}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center justify-between px-4 py-2.5"
+                  className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors"
                 >
-                  <div>
+                  <div className="flex items-center gap-2">
                     <span className="text-white font-display font-bold text-xs">{entry.player}</span>
-                    <span className="text-on-surface-variant text-xs ml-2">{entry.action}</span>
+                    <span className="text-slate-400 text-xs">— {entry.action}</span>
                   </div>
-                  <span className={`font-display font-black text-sm ${entry.delta > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  <span className={`font-display font-black text-sm px-2 py-0.5 rounded ${entry.delta > 0 ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20" : "text-red-400 bg-red-500/10 border border-red-500/20"}`}>
                     {entry.delta > 0 ? `+${entry.delta}` : entry.delta}
                   </span>
                 </motion.div>
@@ -416,19 +425,22 @@ if (step === "select") {
 
   // ── Step 3: Result ──
   return (
-    <div className="p-6 max-w-lg mx-auto pb-24 md:pb-6 flex flex-col items-center text-center gap-6 pt-16">
+    <div className="p-6 max-w-lg mx-auto pb-24 md:pb-6 flex flex-col items-center text-center gap-6 pt-12">
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200 }}
-        className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center"
+        className="relative"
       >
-        <Trophy size={40} className="text-emerald-400" />
+        <div className="absolute -inset-4 bg-amber-500/20 rounded-full blur-xl animate-pulse" />
+        <div className="w-24 h-24 rounded-full bg-slate-900 border-2 border-amber-400/80 flex items-center justify-center relative shadow-2xl shadow-amber-500/20">
+          <Trophy size={44} className="text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.4)]" />
+        </div>
       </motion.div>
 
       <div>
-        <p className="text-on-surface-variant text-xs font-display uppercase tracking-widest mb-1">Match Complete</p>
-        <h2 className="text-3xl font-display font-black text-white">{result?.winner} Wins!</h2>
+        <p className="text-amber-400 text-xs font-display font-bold uppercase tracking-[0.2em] mb-1">Match Complete</p>
+        <h2 className="text-3xl font-display font-black text-white uppercase tracking-tight">{result?.winner} Wins!</h2>
       </div>
 
       {/* Rating changes */}
@@ -436,36 +448,38 @@ if (step === "select") {
         {[p1!, p2!].map((player, i) => {
           const delta = result?.ratingDeltas[i] ?? 0;
           return (
-            <div key={player.id} className="bg-surface-container rounded-xl border border-outline-variant/20 p-4">
-              <p className="text-xs font-display font-black text-on-surface-variant uppercase tracking-wider mb-1 truncate">{player.name}</p>
-              <p className="text-2xl font-display font-black text-white">{result?.newRatings[i]}</p>
-              <p className={`text-sm font-display font-bold ${delta >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                {delta >= 0 ? `+${delta}` : delta} rating
-              </p>
+            <div key={player.id} className="bg-slate-900/80 rounded-2xl border border-slate-800 p-4 shadow-xl backdrop-blur-md">
+              <p className="text-[10px] font-display font-black text-slate-400 uppercase tracking-wider mb-1 truncate">{player.name}</p>
+              <p className="text-3xl font-display font-black text-white">{result?.newRatings[i]}</p>
+              <div className="mt-1">
+                <span className={`inline-block text-xs font-display font-bold px-2 py-0.5 rounded-full ${delta >= 0 ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20" : "text-red-400 bg-red-500/10 border border-red-500/20"}`}>
+                  {delta >= 0 ? `+${delta}` : delta} rating
+                </span>
+              </div>
             </div>
           );
         })}
       </div>
 
       {/* Score summary */}
-      <div className="w-full bg-surface-container rounded-xl border border-outline-variant/20 p-4">
-        <p className="text-[10px] font-display uppercase tracking-widest text-on-surface-variant mb-3">Final Score</p>
+      <div className="w-full bg-slate-900/80 rounded-2xl border border-slate-800 p-5 shadow-xl backdrop-blur-md">
+        <p className="text-[10px] font-display font-black uppercase tracking-widest text-slate-400 mb-4">Final Score</p>
         <div className="flex items-center justify-around">
-          <div>
-            <p className="text-white font-display font-bold text-sm">{p1!.name}</p>
-            <p className="text-3xl font-display font-black text-white">{scores[0]}</p>
+          <div className="space-y-1">
+            <p className="text-slate-300 font-display font-bold text-xs truncate max-w-[100px]">{p1!.name}</p>
+            <p className="text-4xl font-display font-black text-white">{scores[0]}</p>
           </div>
-          <p className="text-on-surface-variant font-display font-black text-lg">—</p>
-          <div>
-            <p className="text-white font-display font-bold text-sm">{p2!.name}</p>
-            <p className="text-3xl font-display font-black text-white">{scores[1]}</p>
+          <p className="text-slate-600 font-display font-black text-xl">—</p>
+          <div className="space-y-1">
+            <p className="text-slate-300 font-display font-bold text-xs truncate max-w-[100px]">{p2!.name}</p>
+            <p className="text-4xl font-display font-black text-white">{scores[1]}</p>
           </div>
         </div>
       </div>
 
       <button
         onClick={reset}
-        className="w-full py-4 rounded-xl bg-white text-background font-display font-black uppercase tracking-wider text-sm hover:bg-primary transition-all"
+        className="w-full py-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-display font-black uppercase tracking-wider text-sm transition-all shadow-lg shadow-amber-400/10 active:scale-[0.99]"
       >
         New Match
       </button>
