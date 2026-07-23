@@ -89,7 +89,7 @@ app.post('/api/register',async (req,res) => {
 
 app.get('/api/players',async (req,res) => {
     const conn = await pool.connect()
-    const players = await pool.query('SELECT name,rating,phone FROM users');
+    const players = await pool.query('SELECT id,name,rating,phone FROM users');
     await conn.release()
     return res.json(players.rows)
 })
