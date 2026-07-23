@@ -80,7 +80,8 @@ app.post('/api/register',async (req,res) => {
     const {signupName,signupEmail,signupPhone,signupAge,loginPassword} = req.body
     const hashedPassword = await bcrypt.hash(loginPassword,12);
     const conn = await pool.connect()
-    await pool.query('INSERT INTO users(name,email,phone,password,age,rating) VALUES ($1,$2,$3,$4,$5,0)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
+    await pool.query('INSERT INTO users(name,email,phone,password,age,rating) VALUES ($1,$2,$3,$4,$5,500)',[signupName,signupEmail,signupPhone,hashedPassword,signupAge]);
+    await pool.query('INSERT INTO stats(name,phone,rating) VALUES($1,$2,500)',[signupName,signupPhone]);
     await conn.release()
     return res.status(200).json({message:"User registered"});
 
@@ -88,15 +89,19 @@ app.post('/api/register',async (req,res) => {
 
 app.get('/api/players',async (req,res) => {
     const conn = await pool.connect()
-    const players = await pool.query('SELECT name,rating FROM users');
+    const players = await pool.query('SELECT name,rating,phone FROM users');
     await conn.release()
     return res.json(players.rows)
 })
 
-// app.post('api/match',async (req,res) => {
-//     const {player1_id,player2_id,p1_points,p2_points,winner_id,new_rating_p1,new_rating_p2} = req.body
-//     const conn = await pool.connect()
-//     await pool.query("SELECT ")
-// })
+app.post('api/match',async (req,res) => {
+    const {player1_id,player2_id,p1_points,p2_points,winner_id,new_rating_p1,new_rating_p2,p1phone,p2phone} = req.body
+    const conn = await pool.connect()
+    await pool.query("UPDATE stats set points=$1,rating=$2 WHERE phone=$3",[p1_points,new_rating_p1,p1phone]);
+    await pool.query("UPDATE stats set points=$1,rating=$2 WHERE phone=$3",[p2_points,new_rating_p2,p2phone]);
+    await conn.release()
+    return res.json({message:"Rating updated"});
+})
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
