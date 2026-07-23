@@ -177,6 +177,8 @@ export default function MatchScorer() {
           winner_id:    winner.id,
           new_rating_p1: newRatingA,
           new_rating_p2: newRatingB,
+          p1phone: p1.phone,
+          p2phone: p2.phone
         }),
       });
 
