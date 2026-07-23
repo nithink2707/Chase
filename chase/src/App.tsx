@@ -203,65 +203,133 @@ export default function MatchScorer() {
   };
 
   // ── Step 1: Select players ──
-  if (step === "select") {
-    return (
-      <div className="p-6 max-w-2xl mx-auto pb-24 md:pb-6">
-        <div className="mb-8">
-          <p className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-on-surface-variant mb-1">8-Ball Pool</p>
-          <h1 className="text-3xl font-display font-black text-white uppercase tracking-tighter">Match Scorer</h1>
-          <p className="text-on-surface-variant text-sm mt-1">Select two players to start scoring a live match.</p>
-        </div>
+if (step === "select") {
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8">
+      <div className="max-w-xl mx-auto pb-28 md:pb-12">
+        {/* Header Section */}
+        <header className="mb-8 border-b border-slate-800/80 pb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <p className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
+              8-Ball Pool
+            </p>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">
+            Match Scorer
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Select two players to initiate the live scoreboard.
+          </p>
+        </header>
 
         {loading ? (
-          <p className="text-on-surface-variant animate-pulse font-display">Loading players...</p>
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-slate-400 text-sm font-medium animate-pulse">
+              Fetching player roster...
+            </p>
+          </div>
         ) : (
-          <div className="space-y-6">
-            {[{ label: "Player 1", val: p1, set: setP1 }, { label: "Player 2", val: p2, set: setP2 }].map(({ label, val, set }) => (
-              <div key={label}>
-                <p className="text-xs font-display font-black uppercase tracking-widest text-on-surface-variant mb-2">{label}</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {players.map((player) => {
-                    const otherSelected = label === "Player 1" ? p2?.id : p1?.id;
-                    const selectedId = label === "Player 1" ? p1?.id : p2?.id;
-                    const isSelected = selectedId === player.id;
-                    const isDisabled = Boolean(otherSelected) && player.id === otherSelected && !isSelected;
+          <div className="space-y-8">
+            {[
+              { label: "Player 1", current: p1, other: p2, set: setP1 },
+              { label: "Player 2", current: p2, other: p1, set: setP2 },
+            ].map(({ label, current, other, set }) => (
+              <section key={label} className="space-y-3">
+                {/* Slot Header */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    {label}
+                  </span>
+                  <span className="text-xs font-medium text-slate-500">
+                    {current ? (
+                      <span className="text-emerald-400 font-semibold">
+                        {current.name}
+                      </span>
+                    ) : (
+                      "Not selected"
+                    )}
+                  </span>
+                </div>
+
+                {/* Player Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  {players?.map((player) => {
+                    const isSelected =
+                      current?.id != null &&
+                      String(current.id) === String(player.id);
+                    const isDisabled =
+                      other?.id != null &&
+                      String(other.id) === String(player.id);
+
                     return (
                       <button
-                        key={player.id}
+                        key={`${label}-${player.id}`}
+                        type="button"
                         disabled={isDisabled}
-                        onClick={() => {
-                          if (!isDisabled) {set(player)}}}
-                        className={`px-4 py-3 rounded-xl border text-sm font-display font-bold transition-all duration-150 text-left ${
+                        onClick={() => set(isSelected ? null : player)}
+                        className={`group relative p-3.5 rounded-2xl border text-left transition-all duration-200 outline-none ${
                           isSelected
-                            ? "bg-primary/20 border-primary text-white"
+                            ? "bg-emerald-950/40 border-emerald-500 text-white shadow-lg shadow-emerald-950/50 ring-2 ring-emerald-500/40"
                             : isDisabled
-                            ? "opacity-30 cursor-not-allowed border-outline-variant/10 text-on-surface-variant"
-                            : "border-outline-variant/20 text-on-surface-variant hover:text-white hover:border-primary/40 hover:bg-surface-container-high"
+                            ? "bg-slate-900/30 border-slate-900 text-slate-600 opacity-40 cursor-not-allowed"
+                            : "bg-slate-900/90 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-800/80 active:scale-[0.98]"
                         }`}
                       >
-                        <p className="truncate">{player.name}</p>
-                        <p className="text-[10px] opacity-60 font-normal mt-0.5">Rating: {player.rating}</p>
+                        {/* Name */}
+                        <p className="font-bold text-sm truncate tracking-wide">
+                          {player.name}
+                        </p>
+
+                        {/* Rating Badge */}
+                        <div className="flex items-center justify-between mt-1.5">
+                          <span
+                            className={`text-[11px] font-mono ${
+                              isSelected
+                                ? "text-emerald-300"
+                                : "text-slate-400 group-hover:text-slate-300"
+                            }`}
+                          >
+                            Rating: {player.rating}
+                          </span>
+
+                          {/* Selected Check Indicator */}
+                          {isSelected && (
+                            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                          )}
+                        </div>
                       </button>
                     );
                   })}
                 </div>
-              </div>
+              </section>
             ))}
 
-            {error && <p className="text-error text-sm font-display">{error}</p>}
+            {error && (
+              <div className="p-3.5 rounded-xl bg-red-950/40 border border-red-800/50 text-red-400 text-sm font-medium">
+                {error}
+              </div>
+            )}
 
-            <button
-              disabled={!p1 || !p2}
-              onClick={() => setStep("playing")}
-              className="w-full py-4 rounded-xl bg-white text-background font-display font-black uppercase tracking-wider text-sm hover:bg-primary transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Start Match →
-            </button>
+            {/* Bottom Action Bar */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-950/80 backdrop-blur-md border-t border-slate-800/80 md:relative md:bg-transparent md:border-0 md:p-0">
+              <button
+                type="button"
+                disabled={!p1 || !p2}
+                onClick={() => setStep("playing")}
+                className="w-full max-w-xl mx-auto py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-950/50 active:scale-[0.99]"
+              >
+                <span>Start Match</span>
+                <span className="text-lg">→</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   // ── Step 2: Live scoring ──
   if (step === "playing") {
