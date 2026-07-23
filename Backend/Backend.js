@@ -85,5 +85,18 @@ app.post('/api/register',async (req,res) => {
     return res.status(200).json({message:"User registered"});
 
 })
+
+app.get('/api/players',async (req,res) => {
+    const conn = await pool.connect()
+    const players = await pool.query('SELECT name FROM users');
+    await conn.release()
+    return res.json(players)
+})
+
+// app.post('api/match',async (req,res) => {
+//     const {player1_id,player2_id,p1_points,p2_points,winner_id,new_rating_p1,new_rating_p2} = req.body
+//     const conn = await pool.connect()
+//     await pool.query("SELECT ")
+// })
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
