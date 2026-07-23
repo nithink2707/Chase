@@ -163,6 +163,7 @@ export default function MatchScorer() {
       finalScores[0], finalScores[1],
       winnerIdx
     );
+    console.log(`${p1.rating} ${p2.rating} ${newRatingA} ${newRatingB} ${finalScores}`);
 
     try {
       const res = await fetch(`${API_URL}/api/match`, {
