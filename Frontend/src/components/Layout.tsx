@@ -249,7 +249,7 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
             );
           })}
-          <Link to="/profile" className="flex flex-col items-center gap-1 py-3 px-3 relative">
+          {/* <Link to="/profile" className="flex flex-col items-center gap-1 py-3 px-3 relative">
             {location.pathname === "/profile" && (
               <span className="absolute top-2 inset-x-1 h-[2px] rounded-full bg-primary" />
             )}
@@ -257,7 +257,7 @@ export default function Layout({ children }: LayoutProps) {
             <span className={`text-[10px] font-display font-bold uppercase tracking-wider ${location.pathname === "/profile" ? "text-white" : "text-on-surface-variant"}`}>
               Profile
             </span>
-          </Link>
+          </Link> */}
         </div>
       </nav>
     </div>  
