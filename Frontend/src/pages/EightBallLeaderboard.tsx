@@ -163,15 +163,6 @@ export default function EightBallLeaderboard({
     if (onFilterChange) onFilterChange(val);
   };
 
-  const handleRefreshClick = async () => {
-    setRefreshing(true);
-    if (onRefresh) {
-      await getData();
-    } else {
-      await loadInternal(true);
-    }
-    setRefreshing(false);
-  };
 
   const filtered = activePlayers.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
