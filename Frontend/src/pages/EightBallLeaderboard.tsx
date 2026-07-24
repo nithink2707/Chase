@@ -166,7 +166,7 @@ export default function EightBallLeaderboard({
   const handleRefreshClick = async () => {
     setRefreshing(true);
     if (onRefresh) {
-      await onRefresh();
+      await getData();
     } else {
       await loadInternal(true);
     }
@@ -631,23 +631,6 @@ export default function EightBallLeaderboard({
           </button>
         </motion.div>
       )}
-
-      {/* Refresh */}
-      <div className="flex justify-center mb-8">
-        <button
-          onClick={handleRefreshClick}
-          disabled={refreshing}
-          className="flex items-center gap-2 px-5 py-2 rounded-full bg-surface-container border border-outline-variant/20 text-on-surface-variant hover:text-white transition-colors font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50"
-        >
-          <motion.div
-            animate={refreshing ? { rotate: 360 } : { rotate: 0 }}
-            transition={refreshing ? { duration: 0.8, repeat: Infinity, ease: "linear" } : {}}
-          >
-            <RefreshCw size={13} />
-          </motion.div>
-          {refreshing ? "Refreshing..." : "Refresh"}
-        </button>
-      </div>
 
     </div>
   );
