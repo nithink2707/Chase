@@ -28,10 +28,10 @@ export default function TournamentDetails() {
               <span className="bg-surface-container-highest/80 backdrop-blur border border-outline-variant/30 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Pro Tier</span>
               <span className="bg-primary text-background px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Live</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black font-display text-white italic">Global Apex Invitational</h1>
+            <h1 className="text-4xl md:text-6xl font-black font-display text-white italic">Chaseclub Pool S1</h1>
             <div className="flex items-center gap-4 text-on-surface-variant font-medium">
               <span className="flex items-center gap-2">
-                <Calendar size={18} className="text-primary" /> Oct 15 - Nov 20, 2024
+                <Calendar size={18} className="text-primary" /> July 25 10:00 AM - 5:00 PM
               </span>
             </div>
           </div>
@@ -39,7 +39,7 @@ export default function TournamentDetails() {
           <div className="w-full md:w-auto text-right space-y-6">
             <div>
               <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-1">Prize Pool</p>
-              <p className="text-4xl md:text-5xl font-black font-display text-primary">$2,500,000</p>
+              <p className="text-4xl md:text-5xl font-black font-display text-primary">₹2,000</p>
             </div>
             <button className="w-full md:w-auto bg-primary text-background font-display font-bold px-10 py-4 rounded-lg hover:bg-white transition-all uppercase text-sm tracking-tight shadow-xl">
               Register Team
@@ -59,9 +59,9 @@ export default function TournamentDetails() {
             </div>
             <div className="space-y-4">
               {[
-                { label: "Game Mode", value: "5v5 Tactical" },
-                { label: "Match Type", value: "Best of 3 (BO3)" },
-                { label: "Finals", value: "Best of 5 (BO5)" },
+                { label: "Game Format", value: "Round Robin" },
+                { label: "Number of Sets per Match", value: "1" },
+                { label: "Finals", value: "Best of 3" },
               ].map((item, idx) => (
                 <div key={idx} className="flex justify-between items-center border-b border-outline-variant/10 pb-3 last:border-0 last:pb-0">
                   <span className="text-on-surface-variant text-sm font-medium">{item.label}</span>
@@ -75,13 +75,13 @@ export default function TournamentDetails() {
           <div className="bg-surface-container p-6 rounded-xl border border-outline-variant/10 shadow-lg">
              <div className="flex items-center gap-3 mb-6">
               <CheckCircle size={22} className="text-primary" />
-              <h3 className="text-xl font-bold font-display text-white">Eligibility</h3>
+              <h3 className="text-xl font-bold font-display text-white">Details</h3>
             </div>
             <ul className="space-y-4">
               {[
-                "Minimum rank: Diamond I+",
-                "Mandatory Anti-Cheat Client",
-                "5 Roster + 2 Substitutes"
+                "Registration Fee: ₹250",
+                "2 French Tables for Gameplay",
+                "Guaranteed 2 Games of Gameplay"
               ].map((item, idx) => (
                 <li key={idx} className="flex items-start gap-3 text-on-surface-variant text-sm font-medium">
                   <CheckCircle size={16} className="text-primary mt-0.5 shrink-0" />
@@ -106,26 +106,23 @@ export default function TournamentDetails() {
           <div className="relative border-l-2 border-outline-variant/20 ml-4 pl-10 space-y-12">
             {[
               { 
-                title: "Group Stage", 
-                date: "Oct 15 - Oct 25", 
-                status: "Completed", 
-                desc: "Round Robin format. Top 2 teams from each group advance.", 
-                progress: 100, 
+                title: "Group Stage",  
+                status: "In Progress", 
+                desc: "Round Robin format. Top 1 player from each group advances.", 
+                progress: 20, 
                 color: "bg-primary" 
               },
               { 
-                title: "Playoffs", 
-                date: "Nov 1 - Nov 10", 
-                status: "In Progress", 
-                desc: "Double Elimination Bracket. 8 Teams competing for finals.", 
-                progress: 60, 
+                title: "Group Stage", 
+                status: "Upcoming", 
+                desc: "Round Robin format. Top player wins.", 
+                progress: 0, 
                 color: "bg-secondary" 
               },
               { 
                 title: "Grand Finals", 
-                date: "Nov 20", 
                 status: "Upcoming", 
-                desc: "Best of 5 Championship match. Live at the Apex Arena.", 
+                desc: "Best of 3 Championship match. Live at Que & Console.", 
                 progress: 0, 
                 color: "bg-surface-container-highest" 
               },
