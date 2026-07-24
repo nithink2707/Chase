@@ -41,7 +41,7 @@ export default function TournamentDetails() {
               <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-1">Prize Pool</p>
               <p className="text-4xl md:text-5xl font-black font-display text-primary">₹2,000</p>
             </div>
-            <button className="w-full md:w-auto bg-primary text-background font-display font-bold px-10 py-4 rounded-lg hover:bg-white transition-all uppercase text-sm tracking-tight shadow-xl">
+            <button className="w-full md:w-auto bg-primary text-background font-display font-bold px-10 py-4 rounded-lg hover:bg-white transition-all uppercase text-sm tracking-tight shadow-xl" onClick= { () => {window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSdGS31sIzqX14sGwZZHVzhsF85MbFfuGmtqHPjEpzGg9yvN3A/viewform?usp=dialog'}}>
               Register Team
             </button>
           </div>
