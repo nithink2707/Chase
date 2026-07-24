@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Trophy, RefreshCw, Search, ChevronDown, ChevronUp, Minus, X, GitCompare, Calendar, Infinity } from "lucide-react";
 
 // ── CHASE LOGO SVG COMPONENT ──
-function ChaseLogo({ className = "h-6 w-auto" }: { className?: string }) {
+function ChaseLogo({ className = "h-6 " }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 2L2 12l10 10 10-10L12 2zm0 3.83L18.17 12 12 18.17 5.83 12 12 5.83z" />
