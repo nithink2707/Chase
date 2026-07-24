@@ -68,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
           })}
           
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
-            <Link
+            {/* <Link
               to="/profile"
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-display text-sm font-medium",
@@ -79,7 +79,7 @@ export default function Layout({ children }: LayoutProps) {
             >
               <User size={20} />
               Profile
-            </Link>
+            </Link> */}
             <button
               onClick={async ()=>{
                 await handleLogout()
