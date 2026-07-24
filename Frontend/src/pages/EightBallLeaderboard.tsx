@@ -27,7 +27,7 @@ export interface Player {
 type ApiPlayer = {
   id: string | number;
   name: string;
-  elo: number;
+  rating: number;
   points: number;
 };
 
@@ -47,7 +47,7 @@ function mapToPlayer(row: ApiPlayer, index: number): Player {
     rank: index + 1,
     prev_rank: index + 1,
     name: row.name,
-    elo: row.elo,
+    elo: row.rating,
     matches: 0,
     wins: 0,
     losses: 0,
