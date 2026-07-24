@@ -25,7 +25,7 @@ export default function TournamentDetails() {
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
           <div className="space-y-4">
             <div className="flex gap-2">
-              <span className="bg-surface-container-highest/80 backdrop-blur border border-outline-variant/30 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Pro Tier</span>
+              <span className="bg-surface-container-highest/80 backdrop-blur border border-outline-variant/30 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Amateur Tier</span>
               <span className="bg-primary text-background px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Live</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black font-display text-white italic">Chaseclub Pool S1</h1>
