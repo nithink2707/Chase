@@ -180,6 +180,7 @@ const createAccount = async () => {
     console.error(err);
   } finally {
     setIsRedirecting(false);
+    setModalTab("Login")
   }
 };
 
