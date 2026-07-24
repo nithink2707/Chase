@@ -1,6 +1,5 @@
-import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Trophy, 
   Target, 
@@ -13,7 +12,7 @@ import {
   LogOut 
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import {handleLogout,useAuth} from "../App"
+import { handleLogout, useAuth } from "../App";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -21,16 +20,13 @@ interface LayoutProps {
 
 const navItems = [
   { icon: Trophy,  label: "Tournaments", path: "/tournaments" },
-  { icon: Target,  label: "Leaderboard", path: "/leaderboard/8ball" }
-  // { icon: Users,   label: "Teams",       path: "/teams" },
-  // { icon: Activity,label: "Activity",    path: "/activity" },
+  { icon: Target,  label: "Leaderboard", path: "/leaderboard/8ball" },
 ];
-
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const {setUser} = useAuth()
+  const { setUser } = useAuth();
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const onLogout = async () => {
@@ -39,14 +35,17 @@ export default function Layout({ children }: LayoutProps) {
     navigate("/", { replace: true });
   };
 
-
   return (
     <div className="flex min-h-screen bg-background font-sans">
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-[#1A1A1A] border-r border-outline-variant/20 sticky top-0 h-screen z-40">
-        <div className="p-6 mb-2  ">
+        <div className="p-6 mb-2">
           <div className="flex justify-center">
-            <img src="/chasewhite.png" alt="Chase" className="h-7"/>
+            <img 
+              src="/chasewhite.png" 
+              alt="Chase" 
+              className="h-7 w-auto shrink-0 object-contain" 
+            />
           </div>
         </div>
 
@@ -73,24 +72,8 @@ export default function Layout({ children }: LayoutProps) {
           })}
           
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
-            {/* <Link
-              to="/profile"
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-display text-sm font-medium",
-                location.pathname === "/profile"
-                    ? "bg-surface-container-highest text-white border-r-2 border-primary" 
-                    : "text-on-surface-variant hover:text-white hover:bg-surface-container-high"
-              )}
-            >
-              <User size={20} />
-              Profile
-            </Link> */}
             <button
-              onClick={async ()=>{
-                await handleLogout()
-                setUser(null)
-                navigate("/",{replace:true})
-              }}
+              onClick={onLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-display text-sm font-medium text-on-surface-variant hover:text-error hover:bg-error/10 mt-1 cursor-pointer"
             >
               <LogOut size={20} />
@@ -123,7 +106,11 @@ export default function Layout({ children }: LayoutProps) {
         mobileDrawerOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-5 flex items-center justify-between border-b border-outline-variant/10">
-          <img src="/chasewhite.png" alt="Chase" className="h-6" />
+          <img 
+            src="/chasewhite.png" 
+            alt="Chase" 
+            className="h-6 w-auto shrink-0 object-contain" 
+          />
           <button 
             onClick={() => setMobileDrawerOpen(false)}
             className="p-1 text-on-surface-variant hover:text-white"
@@ -192,23 +179,21 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </aside>
 
-
-
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 pb-16 md:pb-0">
         {/* Header */}
         <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
-          <div className="flex items-center gap-4 flex-1">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
             <button 
               onClick={() => setMobileDrawerOpen(true)}
-              className="md:hidden text-on-surface p-1 hover:text-primary transition-colors"
+              className="md:hidden text-on-surface p-1 hover:text-primary transition-colors shrink-0"
               aria-label="Open menu"
             >
               <Menu size={24} />
             </button>
             
             <div className="hidden md:flex items-center gap-3 bg-surface-container px-4 py-2 rounded-full border border-outline-variant/20 max-w-md w-full">
-              <Search size={18} className="text-on-surface-variant" />
+              <Search size={18} className="text-on-surface-variant shrink-0" />
               <input 
                 type="text" 
                 placeholder="Search tournaments, teams, players..."
@@ -216,11 +201,16 @@ export default function Layout({ children }: LayoutProps) {
               />
             </div>
             
-            <h1 className="md:hidden text-lg font-black tracking-tighter text-white uppercase font-display">
-               Chase
-            </h1>
+            <div className="md:hidden flex items-center min-w-0">
+              <img 
+                src="/chasewhite.png" 
+                alt="Chase" 
+                className="h-6 w-auto shrink-0 object-contain" 
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-4 shrink-0">
             <button className="p-2 text-on-surface-variant hover:text-white transition-colors relative">
               <Bell size={20} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-[#1A1A1A]"></span>
@@ -237,7 +227,7 @@ export default function Layout({ children }: LayoutProps) {
         </main>
       </div>
 
-{/* Mobile Nav */}
+      {/* Mobile Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-outline-variant/20 px-4 z-40">
         <div className="flex items-center justify-around">
           {navItems.map((item) => {
@@ -270,7 +260,6 @@ export default function Layout({ children }: LayoutProps) {
           </Link>
         </div>
       </nav>
-
     </div>  
   );
 }
