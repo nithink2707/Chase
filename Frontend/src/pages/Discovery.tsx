@@ -11,10 +11,10 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/src/lib/utils";
 
-const sports = ["Football", "Cricket", "Badminton"];
+const sports = ["8-Ball Pool"];
 
 export default function Discovery() {
-  const [activeSport, setActiveSport] = useState("Football");
+  const [activeSport, setActiveSport] = useState("8-Ball Pool");
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 pb-20 md:pb-8">
@@ -67,17 +67,17 @@ export default function Discovery() {
             
             <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full md:w-2/3">
               <span className="inline-block px-4 py-1.5 bg-surface-container-highest/80 backdrop-blur-md border border-outline-variant/30 text-primary font-display text-[10px] font-bold uppercase tracking-widest rounded-full mb-6">
-                {activeSport === "Football" ? "Chase Exclusive" : "Coming Soon"}
+                {activeSport === "8-Ball Pool" ? "Chase Exclusive" : "Coming Soon"}
               </span>
               <h3 className="text-3xl md:text-5xl font-bold font-display text-white mb-4 line-height-[1.1]">
-                {activeSport === "Football" ? "Chumma Football League 2026" : `${activeSport} Elite`}
+                {activeSport === "8-Ball Pool" ? "Chaseclub Pool S1" : `${activeSport} Elite`}
               </h3>
               <p className="text-on-surface-variant text-lg mb-8 line-clamp-2 md:line-clamp-none font-medium italic">
-                {activeSport === "Football" 
-                  ? "The most prestigious amateur football championship powered by Chase. Experience elite statistics and real-time tracking."
+                {activeSport === "8-Ball Pool" 
+                  ? "The most prestigious amateur 8-ball pool championship powered by Chase. Experience elite statistics and real-time tracking."
                   : "We are currently preparing the elite tournament structures for this sport. Stay tuned for the unveiling."}
               </p>
-              {activeSport === "Football" ? (
+              {activeSport === "8-Ball Pool" ? (
                 <Link 
                   to="/tournaments/pro-league"
                   className="inline-flex items-center gap-2 bg-white text-background font-display font-bold px-8 py-3.5 rounded-lg hover:bg-primary transition-colors uppercase text-sm tracking-tight"
