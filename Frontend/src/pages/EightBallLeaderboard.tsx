@@ -1,12 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Trophy, RefreshCw, Search, ChevronDown, ChevronUp, Minus, X, GitCompare, Clock, Calendar, Infinity } from "lucide-react";
+import { Trophy, RefreshCw, Search, ChevronDown, ChevronUp, Minus, X, GitCompare, Calendar, Infinity } from "lucide-react";
 
-interface Player {
+// ── CHASE LOGO SVG COMPONENT ──
+function ChaseLogo({ className = "h-6 w-auto" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L2 12l10 10 10-10L12 2zm0 3.83L18.17 12 12 18.17 5.83 12 12 5.83z" />
+    </svg>
+  );
+}
+
+export interface Player {
   id: string;
   rank: number;
   prev_rank: number;
   name: string;
+  elo: number; // Added Elo field
   matches: number;
   wins: number;
   losses: number;
@@ -14,76 +24,40 @@ interface Player {
   Points: number;
 }
 
-async function fetchLeaderboard(filter: "tournament" | "yearly" | "alltime"): Promise<Player[]> {
-  await new Promise((r) => setTimeout(r, 900));
+// ── PROPS FOR DYNAMIC DATABASE DATA ──
+interface LeaderboardProps {
+  players?: Player[];
+  isLoading?: boolean;
+  onRefresh?: () => Promise<void> | void;
+  onFilterChange?: (filter: "tournament" | "yearly" | "alltime") => void;
+}
 
-  const tournament = [
-    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",    matches: 38, wins: 31, losses: 7,  win_rate: 81.6, Points: 162 },
-    { id: "2",  rank: 2,  prev_rank: 4,  name: "Nithin R.",       matches: 35, wins: 28, losses: 7,  win_rate: 80.0, Points: 160 },
-    { id: "3",  rank: 3,  prev_rank: 2,  name: "Karan Verma",     matches: 40, wins: 31, losses: 9,  win_rate: 77.5, Points: 155 },
-    { id: "4",  rank: 4,  prev_rank: 3,  name: "Priya Nair",      matches: 33, wins: 25, losses: 8,  win_rate: 75.8, Points: 152 },
-    { id: "5",  rank: 5,  prev_rank: 5,  name: "Dev Rathore",     matches: 29, wins: 21, losses: 8,  win_rate: 72.4, Points: 148 },
-    { id: "6",  rank: 6,  prev_rank: 8,  name: "Ananya Shah",     matches: 27, wins: 19, losses: 8,  win_rate: 70.4, Points: 140 },
-    { id: "7",  rank: 7,  prev_rank: 6,  name: "Rohan Das",       matches: 31, wins: 21, losses: 10, win_rate: 67.7, Points: 135 },
-    { id: "8",  rank: 8,  prev_rank: 7,  name: "Vikram Rao",      matches: 25, wins: 16, losses: 9,  win_rate: 64.0, Points: 128 },
-    { id: "9",  rank: 9,  prev_rank: 11, name: "Meera Pillai",    matches: 22, wins: 14, losses: 8,  win_rate: 63.6, Points: 127 },
-    { id: "10", rank: 10, prev_rank: 9,  name: "Aditya Bose",     matches: 24, wins: 15, losses: 9,  win_rate: 62.5, Points: 125 },
-    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 20, wins: 12, losses: 8,  win_rate: 60.0, Points: 118 },
-    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 18, wins: 10, losses: 8,  win_rate: 55.6, Points: 110 },
-    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 17, wins: 9,  losses: 8,  win_rate: 52.9, Points: 104 },
-    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 15, wins: 8,  losses: 7,  win_rate: 53.3, Points: 98  },
-    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 14, wins: 7,  losses: 7,  win_rate: 50.0, Points: 90  },
-    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 13, wins: 6,  losses: 7,  win_rate: 46.2, Points: 82  },
-    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 12, wins: 5,  losses: 7,  win_rate: 41.7, Points: 74  },
-    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 11, wins: 4,  losses: 7,  win_rate: 36.4, Points: 66  },
-    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 10, wins: 3,  losses: 7,  win_rate: 30.0, Points: 58  },
-    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 9,  wins: 2,  losses: 7,  win_rate: 22.2, Points: 50  },
+async function fetchMockLeaderboard(filter: "tournament" | "yearly" | "alltime"): Promise<Player[]> {
+  await new Promise((r) => setTimeout(r, 600));
+
+  const tournament: Player[] = [
+    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",    elo: 1850, matches: 38, wins: 31, losses: 7,  win_rate: 81.6, Points: 162 },
+    { id: "2",  rank: 2,  prev_rank: 4,  name: "Nithin R.",       elo: 1790, matches: 35, wins: 28, losses: 7,  win_rate: 80.0, Points: 160 },
+    { id: "3",  rank: 3,  prev_rank: 2,  name: "Karan Verma",     elo: 1740, matches: 40, wins: 31, losses: 9,  win_rate: 77.5, Points: 155 },
+    { id: "4",  rank: 4,  prev_rank: 3,  name: "Priya Nair",      elo: 1680, matches: 33, wins: 25, losses: 8,  win_rate: 75.8, Points: 152 },
+    { id: "5",  rank: 5,  prev_rank: 5,  name: "Dev Rathore",     elo: 1620, matches: 29, wins: 21, losses: 8,  win_rate: 72.4, Points: 148 },
+    { id: "6",  rank: 6,  prev_rank: 7,  name: "Rohan Gupta",     elo: 1580, matches: 28, wins: 20, losses: 8,  win_rate: 71.4, Points: 140 },
+    { id: "7",  rank: 7,  prev_rank: 6,  name: "Sneha Kapoor",    elo: 1530, matches: 31, wins: 21, losses: 10, win_rate: 67.7, Points: 135 },
+    { id: "8",  rank: 8,  prev_rank: 9,  name: "Vikram Shah",     elo: 1490, matches: 27, wins: 18, losses: 9,  win_rate: 66.6, Points: 130 },
+    { id: "9",  rank: 9,  prev_rank: 8,  name: "Ananya Roy",      elo: 1450, matches: 25, wins: 16, losses: 9,  win_rate: 64.0, Points: 125 },
+    { id: "10", rank: 10, prev_rank: 10, name: "Kabir Sharma",    elo: 1410, matches: 24, wins: 15, losses: 9,  win_rate: 62.5, Points: 120 },
+    { id: "11", rank: 11, prev_rank: 12, name: "Siddharth Rao",   elo: 1380, matches: 22, wins: 13, losses: 9,  win_rate: 59.0, Points: 115 },
+    { id: "12", rank: 12, prev_rank: 11, name: "Tanya Sen",       elo: 1320, matches: 20, wins: 11, losses: 9,  win_rate: 55.0, Points: 110 }
   ];
 
-  const yearly = [
-    { id: "3",  rank: 1,  prev_rank: 2,  name: "Karan Verma",     matches: 98, wins: 74, losses: 24, win_rate: 75.5, Points: 370 },
-    { id: "1",  rank: 2,  prev_rank: 1,  name: "Arjun Mehta",     matches: 90, wins: 67, losses: 23, win_rate: 74.4, Points: 362 },
-    { id: "4",  rank: 3,  prev_rank: 4,  name: "Priya Nair",      matches: 85, wins: 61, losses: 24, win_rate: 71.8, Points: 340 },
-    { id: "2",  rank: 4,  prev_rank: 3,  name: "Nithin R.",       matches: 80, wins: 56, losses: 24, win_rate: 70.0, Points: 328 },
-    { id: "6",  rank: 5,  prev_rank: 7,  name: "Ananya Shah",     matches: 75, wins: 51, losses: 24, win_rate: 68.0, Points: 306 },
-    { id: "5",  rank: 6,  prev_rank: 5,  name: "Dev Rathore",     matches: 72, wins: 48, losses: 24, win_rate: 66.7, Points: 290 },
-    { id: "7",  rank: 7,  prev_rank: 6,  name: "Rohan Das",       matches: 70, wins: 45, losses: 25, win_rate: 64.3, Points: 275 },
-    { id: "8",  rank: 8,  prev_rank: 8,  name: "Vikram Rao",      matches: 65, wins: 40, losses: 25, win_rate: 61.5, Points: 258 },
-    { id: "9",  rank: 9,  prev_rank: 10, name: "Meera Pillai",    matches: 60, wins: 36, losses: 24, win_rate: 60.0, Points: 242 },
-    { id: "10", rank: 10, prev_rank: 9,  name: "Aditya Bose",     matches: 58, wins: 34, losses: 24, win_rate: 58.6, Points: 230 },
-    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 55, wins: 31, losses: 24, win_rate: 56.4, Points: 218 },
-    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 50, wins: 27, losses: 23, win_rate: 54.0, Points: 204 },
-    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 48, wins: 25, losses: 23, win_rate: 52.1, Points: 190 },
-    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 45, wins: 23, losses: 22, win_rate: 51.1, Points: 178 },
-    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 42, wins: 21, losses: 21, win_rate: 50.0, Points: 164 },
-    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 40, wins: 18, losses: 22, win_rate: 45.0, Points: 150 },
-    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 38, wins: 16, losses: 22, win_rate: 42.1, Points: 138 },
-    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 35, wins: 14, losses: 21, win_rate: 40.0, Points: 124 },
-    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 30, wins: 11, losses: 19, win_rate: 36.7, Points: 110 },
-    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 28, wins: 9,  losses: 19, win_rate: 32.1, Points: 96  },
+  const yearly: Player[] = [
+    { id: "3",  rank: 1,  prev_rank: 2,  name: "Karan Verma",     elo: 2100, matches: 98, wins: 74, losses: 24, win_rate: 75.5, Points: 370 },
+    { id: "1",  rank: 2,  prev_rank: 1,  name: "Arjun Mehta",     elo: 2050, matches: 90, wins: 67, losses: 23, win_rate: 74.4, Points: 362 },
   ];
 
-  const alltime = [
-    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",     matches: 320, wins: 255, losses: 65,  win_rate: 79.7, Points: 1280 },
-    { id: "3",  rank: 2,  prev_rank: 3,  name: "Karan Verma",     matches: 310, wins: 238, losses: 72,  win_rate: 76.8, Points: 1190 },
-    { id: "4",  rank: 3,  prev_rank: 2,  name: "Priya Nair",      matches: 290, wins: 215, losses: 75,  win_rate: 74.1, Points: 1105 },
-    { id: "2",  rank: 4,  prev_rank: 4,  name: "Nithin R.",       matches: 280, wins: 203, losses: 77,  win_rate: 72.5, Points: 1050 },
-    { id: "5",  rank: 5,  prev_rank: 5,  name: "Dev Rathore",     matches: 260, wins: 182, losses: 78,  win_rate: 70.0, Points:  980 },
-    { id: "7",  rank: 6,  prev_rank: 7,  name: "Rohan Das",       matches: 255, wins: 175, losses: 80,  win_rate: 68.6, Points:  940 },
-    { id: "6",  rank: 7,  prev_rank: 6,  name: "Ananya Shah",     matches: 240, wins: 161, losses: 79,  win_rate: 67.1, Points:  890 },
-    { id: "8",  rank: 8,  prev_rank: 8,  name: "Vikram Rao",      matches: 220, wins: 143, losses: 77,  win_rate: 65.0, Points:  830 },
-    { id: "9",  rank: 9,  prev_rank: 9,  name: "Meera Pillai",    matches: 200, wins: 126, losses: 74,  win_rate: 63.0, Points:  770 },
-    { id: "10", rank: 10, prev_rank: 10, name: "Aditya Bose",     matches: 195, wins: 119, losses: 76,  win_rate: 61.0, Points:  730 },
-    { id: "11", rank: 11, prev_rank: 12, name: "Sana Kapoor",     matches: 185, wins: 110, losses: 75,  win_rate: 59.5, Points:  690 },
-    { id: "12", rank: 12, prev_rank: 10, name: "Rahul Gupta",     matches: 175, wins: 100, losses: 75,  win_rate: 57.1, Points:  645 },
-    { id: "13", rank: 13, prev_rank: 13, name: "Divya Menon",     matches: 160, wins: 90,  losses: 70,  win_rate: 56.3, Points:  600 },
-    { id: "14", rank: 14, prev_rank: 15, name: "Aakash Patel",    matches: 150, wins: 82,  losses: 68,  win_rate: 54.7, Points:  558 },
-    { id: "15", rank: 15, prev_rank: 14, name: "Nisha Reddy",     matches: 140, wins: 74,  losses: 66,  win_rate: 52.9, Points:  514 },
-    { id: "16", rank: 16, prev_rank: 16, name: "Manish Joshi",    matches: 130, wins: 65,  losses: 65,  win_rate: 50.0, Points:  470 },
-    { id: "17", rank: 17, prev_rank: 18, name: "Pooja Iyer",      matches: 120, wins: 56,  losses: 64,  win_rate: 46.7, Points:  424 },
-    { id: "18", rank: 18, prev_rank: 17, name: "Suresh Kumar",    matches: 110, wins: 47,  losses: 63,  win_rate: 42.7, Points:  378 },
-    { id: "19", rank: 19, prev_rank: 20, name: "Tanya Singh",     matches: 100, wins: 38,  losses: 62,  win_rate: 38.0, Points:  330 },
-    { id: "20", rank: 20, prev_rank: 19, name: "Vikash Sharma",   matches: 90,  wins: 29,  losses: 61,  win_rate: 32.2, Points:  280 },
+  const alltime: Player[] = [
+    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",     elo: 2400, matches: 320, wins: 255, losses: 65,  win_rate: 79.7, Points: 1280 },
+    { id: "3",  rank: 2,  prev_rank: 3,  name: "Karan Verma",     elo: 2350, matches: 310, wins: 238, losses: 72,  win_rate: 76.8, Points: 1190 },
   ];
 
   return filter === "yearly" ? yearly : filter === "alltime" ? alltime : tournament;
@@ -102,6 +76,7 @@ function Trend({ curr, prev }: { curr: number; prev: number }) {
 }
 
 const INITIAL_VISIBLE = 10;
+const PAGE_SIZE = 10;
 
 const filterOptions = [
   { value: "tournament" as const, label: "Season 1", sublabel: "Current", icon: Trophy },
@@ -109,34 +84,63 @@ const filterOptions = [
   { value: "alltime"   as const, label: "All Time",  sublabel: "History",   icon: Infinity },
 ];
 
-export default function EightBallLeaderboard() {
-  const [allPlayers, setAllPlayers]     = useState<Player[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [refreshing, setRefreshing]     = useState(false);
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
-  const [search, setSearch]             = useState("");
-  const [compareIds, setCompareIds]     = useState<string[]>([]);
-  const [lastUpdated, setLastUpdated]   = useState<Date | null>(null);
-  const [timeFilter, setTimeFilter]     = useState<"tournament" | "yearly" | "alltime">("tournament");
-  const [filterOpen, setFilterOpen]     = useState(false);
+export default function EightBallLeaderboard({
+  players: externalPlayers,
+  isLoading: externalLoading,
+  onRefresh,
+  onFilterChange
+}: LeaderboardProps) {
+  const [internalPlayers, setInternalPlayers] = useState<Player[]>([]);
+  const [loading, setLoading]                 = useState(true);
+  const [refreshing, setRefreshing]           = useState(false);
+  const [visibleCount, setVisibleCount]       = useState(INITIAL_VISIBLE);
+  const [search, setSearch]                   = useState("");
+  const [compareIds, setCompareIds]           = useState<string[]>([]);
+  const [lastUpdated, setLastUpdated]         = useState<Date | null>(null);
+  const [timeFilter, setTimeFilter]           = useState<"tournament" | "yearly" | "alltime">("tournament");
+  const [filterOpen, setFilterOpen]           = useState(false);
 
-  const load = useCallback(async (isRefresh = false) => {
+  const activePlayers = externalPlayers ?? internalPlayers;
+  const activeLoading = externalLoading ?? loading;
+
+  const loadInternal = useCallback(async (isRefresh = false) => {
+    if (externalPlayers) return;
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const data = await fetchLeaderboard(timeFilter);
-      setAllPlayers(data);
+      const data = await fetchMockLeaderboard(timeFilter);
+      setInternalPlayers(data);
       setLastUpdated(new Date());
-      setVisibleCount(INITIAL_VISIBLE); // reset on filter change
+      setVisibleCount(INITIAL_VISIBLE);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [timeFilter]);
+  }, [timeFilter, externalPlayers]);
 
-  useEffect(() => { load(); }, [timeFilter]);
+  useEffect(() => { loadInternal(); }, [timeFilter, loadInternal]);
 
-  const filtered = allPlayers.filter((p) =>
+  useEffect(() => {
+    if (externalPlayers) setLastUpdated(new Date());
+  }, [externalPlayers]);
+
+  const handleFilterSelect = (val: "tournament" | "yearly" | "alltime") => {
+    setTimeFilter(val);
+    setFilterOpen(false);
+    if (onFilterChange) onFilterChange(val);
+  };
+
+  const handleRefreshClick = async () => {
+    setRefreshing(true);
+    if (onRefresh) {
+      await onRefresh();
+    } else {
+      await loadInternal(true);
+    }
+    setRefreshing(false);
+  };
+
+  const filtered = activePlayers.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -152,24 +156,21 @@ export default function EightBallLeaderboard() {
         : prev
     );
   };
-  const compareData = allPlayers.filter((p) => compareIds.includes(p.id));
-
+  const compareData = activePlayers.filter((p) => compareIds.includes(p.id));
   const activeFilter = filterOptions.find(f => f.value === timeFilter)!;
 
-  if (loading) {
+  if (activeLoading) {
     return (
-      <div className="p-6 pb-24 md:pb-6 max-w-4xl mx-auto space-y-3">
+      <div className="p-4 md:p-6 pb-24 md:pb-6 max-w-4xl mx-auto space-y-3">
         <div className="h-8 w-48 bg-surface-container rounded-lg animate-pulse" />
         <div className="h-4 w-32 bg-surface-container rounded animate-pulse" />
         <div className="mt-6 rounded-xl border border-outline-variant/20 overflow-hidden">
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 px-4 py-3.5 border-b border-outline-variant/10">
               <div className="w-6 h-4 bg-surface-container rounded animate-pulse" />
               <div className="w-8 h-8 bg-surface-container rounded-full animate-pulse" />
               <div className="flex-1 h-4 bg-surface-container rounded animate-pulse" />
               <div className="w-10 h-4 bg-surface-container rounded animate-pulse" />
-              <div className="w-10 h-4 bg-surface-container rounded animate-pulse" />
-              <div className="w-20 h-2 bg-surface-container rounded-full animate-pulse" />
             </div>
           ))}
         </div>
@@ -178,28 +179,33 @@ export default function EightBallLeaderboard() {
   }
 
   return (
-    <div className="p-6 pb-24 md:pb-6 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 pb-24 md:pb-6 max-w-4xl mx-auto">
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <div className="flex items-center gap-3 mb-1">
+        <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] font-display font-black uppercase tracking-[0.3em] text-on-surface-variant">
             Know the best, beat the rest
           </span>
+
+          <div className="flex items-center shrink-0">
+            <ChaseLogo className="h-6 w-auto text-primary shrink-0" />
+          </div>
         </div>
-        <div className="flex items-end justify-between">
-          <h1 className="text-3xl font-black font-display uppercase tracking-tighter text-white">
+
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-0">
+          <h1 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tighter text-white">
             8-Ball Pool
-            <span className="block text-lg italic text-primary font-bold tracking-tight normal-case">
+            <span className="block text-base sm:text-lg italic text-primary font-bold tracking-tight normal-case">
               LEADERBOARD
             </span>
           </h1>
 
-          {/* ── COOL FILTER DROPDOWN ── */}
-          <div className="relative mb-1">
+          {/* Time Filter Dropdown */}
+          <div className="relative self-start sm:self-auto">
             <button
               onClick={() => setFilterOpen((o) => !o)}
-              className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-primary/40 hover:bg-surface-container-high transition-all duration-200"
+              className="group flex items-center gap-2.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-primary/40 hover:bg-surface-container-high transition-all duration-200"
             >
               <activeFilter.icon size={13} className="text-primary" />
               <div className="text-left">
@@ -219,7 +225,7 @@ export default function EightBallLeaderboard() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute right-0 top-full mt-2 w-44 bg-[#1A1A1A] border border-outline-variant/20 rounded-xl overflow-hidden shadow-[0_16px_40px_-8px_rgba(0,0,0,0.8)] z-20"
+                  className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-44 bg-[#1A1A1A] border border-outline-variant/20 rounded-xl overflow-hidden shadow-[0_16px_40px_-8px_rgba(0,0,0,0.8)] z-20"
                 >
                   <div className="px-3 pt-3 pb-1">
                     <p className="text-[9px] font-display font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Time Period</p>
@@ -227,7 +233,7 @@ export default function EightBallLeaderboard() {
                   {filterOptions.map(({ value, label, sublabel, icon: Icon }) => (
                     <button
                       key={value}
-                      onClick={() => { setTimeFilter(value); setFilterOpen(false); }}
+                      onClick={() => handleFilterSelect(value)}
                       className={`w-full flex items-center gap-3 px-3 py-3 transition-all duration-150 ${
                         timeFilter === value
                           ? "bg-primary/10 text-white"
@@ -256,13 +262,13 @@ export default function EightBallLeaderboard() {
         </div>
 
         {lastUpdated && (
-          <span className="text-[10px] text-on-surface-variant/50 font-display uppercase tracking-wider">
+          <span className="block mt-2 text-[10px] text-on-surface-variant/50 font-display uppercase tracking-wider">
             Updated {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </span>
         )}
       </motion.div>
 
-      {/* Search bar */}
+      {/* Search Bar */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4">
         <div className="flex items-center gap-3 bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 focus-within:border-primary/40 transition-colors">
           <Search size={16} className="text-on-surface-variant shrink-0" />
@@ -286,15 +292,15 @@ export default function EightBallLeaderboard() {
         )}
       </motion.div>
 
-      {/* Compare hint */}
+      {/* Compare Hint */}
       {compareIds.length === 0 && (
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
           className="text-[10px] text-on-surface-variant/40 font-display uppercase tracking-wider mb-3 flex items-center gap-1">
-          <GitCompare size={10} /> Tap any two rows below to compare players
+          <GitCompare size={10} /> Tap any two players to compare
         </motion.p>
       )}
 
-      {/* Comparison Section */}
+      {/* Player Comparison Card */}
       <AnimatePresence>
         {compareIds.length > 0 && (
           <motion.div
@@ -304,7 +310,7 @@ export default function EightBallLeaderboard() {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="mb-4 rounded-2xl border border-outline-variant/20 overflow-hidden bg-surface-container-low"
           >
-            <div className="flex items-center justify-between px-5 py-3 border-b border-outline-variant/20 bg-surface-container">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-outline-variant/20 bg-surface-container">
               <div className="flex items-center gap-2">
                 <GitCompare size={14} className="text-primary" />
                 <span className="font-display font-black uppercase tracking-widest text-white text-xs">Player Comparison</span>
@@ -315,36 +321,37 @@ export default function EightBallLeaderboard() {
             </div>
 
             {compareIds.length === 1 ? (
-              <div className="px-5 py-5 text-center text-on-surface-variant text-sm font-display">
-                Select one more player from the table below to compare.
+              <div className="px-5 py-5 text-center text-on-surface-variant text-xs sm:text-sm font-display">
+                Select one more player from the list to compare.
               </div>
             ) : (
-              <div className="p-5">
-                <div className="grid grid-cols-[1fr_3rem_1fr] gap-3 items-center mb-6">
+              <div className="p-4 sm:p-5">
+                <div className="grid grid-cols-[1fr_2.5rem_1fr] sm:grid-cols-[1fr_3rem_1fr] gap-2 sm:gap-3 items-center mb-6">
                   {compareData.map((p, idx) => (
                     <div key={p.id} className={`flex flex-col items-center gap-2 ${idx === 1 ? "order-3" : "order-1"}`}>
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-display font-black text-white text-base ring-2 ${
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-display font-black text-white text-xs sm:text-base ring-2 ${
                         idx === 0 ? "bg-secondary/20 ring-secondary/50" : "bg-primary/20 ring-primary/50"
                       }`}>
                         {initials(p.name)}
                       </div>
-                      <div className="text-center">
-                        <p className="font-display font-black text-white text-sm">{p.name}</p>
-                        <p className={`text-[10px] font-display uppercase tracking-wider ${medals[p.rank] ?? "text-on-surface-variant"}`}>
+                      <div className="text-center min-w-0 w-full">
+                        <p className="font-display font-black text-white text-xs sm:text-sm truncate">{p.name}</p>
+                        <p className={`text-[9px] sm:text-[10px] font-display uppercase tracking-wider ${medals[p.rank] ?? "text-on-surface-variant"}`}>
                           Rank #{p.rank}
                         </p>
                       </div>
                     </div>
                   ))}
                   <div className="order-2 flex items-center justify-center">
-                    <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center">
-                      <span className="font-display font-black text-[10px] text-on-surface-variant uppercase tracking-wider">VS</span>
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center">
+                      <span className="font-display font-black text-[9px] sm:text-[10px] text-on-surface-variant uppercase tracking-wider">VS</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   {[
+                    { label: "Elo Rating",     key: "elo",      suffix: "",  higher: true,  colorA: "bg-amber-400",  colorB: "bg-amber-400"  },
                     { label: "Matches Played", key: "matches",  suffix: "",  higher: true,  colorA: "bg-secondary",  colorB: "bg-primary"    },
                     { label: "Wins",           key: "wins",     suffix: "",  higher: true,  colorA: "bg-emerald-400", colorB: "bg-emerald-400" },
                     { label: "Losses",         key: "losses",   suffix: "",  higher: false, colorA: "bg-red-400",    colorB: "bg-red-400"    },
@@ -359,10 +366,10 @@ export default function EightBallLeaderboard() {
                     return (
                       <div key={key}>
                         <p className="text-[10px] font-display font-black uppercase tracking-widest text-on-surface-variant text-center mb-2">{label}</p>
-                        <div className="grid grid-cols-[1fr_5rem_1fr] gap-2 items-center">
-                          <div className="flex items-center gap-2 justify-end">
-                            <span className={`font-display font-black text-base ${aWins ? "text-white" : "text-on-surface-variant/50"}`}>{a}{suffix}</span>
-                            <div className="w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden flex justify-end">
+                        <div className="grid grid-cols-[1fr_2rem_1fr] sm:grid-cols-[1fr_5rem_1fr] gap-2 items-center">
+                          <div className="flex items-center gap-1.5 sm:gap-2 justify-end">
+                            <span className={`font-display font-black text-sm sm:text-base ${aWins ? "text-white" : "text-on-surface-variant/50"}`}>{a}{suffix}</span>
+                            <div className="w-14 sm:w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden flex justify-end">
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${(a / max) * 100}%` }}
@@ -373,20 +380,20 @@ export default function EightBallLeaderboard() {
                           </div>
                           <div className="flex justify-center">
                             {a === b ? (
-                              <span className="text-[9px] font-display uppercase tracking-wider text-on-surface-variant/40 px-2 py-1 rounded-full border border-outline-variant/20">tie</span>
+                              <span className="text-[8px] sm:text-[9px] font-display uppercase tracking-wider text-on-surface-variant/40 px-1.5 py-0.5 rounded-full border border-outline-variant/20">tie</span>
                             ) : (
                               <motion.div
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                                className={`w-5 h-5 rounded-full flex items-center justify-center ${aWins ? colorA : colorB}`}
+                                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center ${aWins ? colorA : colorB}`}
                               >
                                 <ChevronUp size={10} className="text-background" style={{ transform: aWins ? "rotate(-90deg)" : "rotate(90deg)" }} />
                               </motion.div>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 justify-start">
-                            <div className="w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                          <div className="flex items-center gap-1.5 sm:gap-2 justify-start">
+                            <div className="w-14 sm:w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${(b / max) * 100}%` }}
@@ -394,140 +401,195 @@ export default function EightBallLeaderboard() {
                                 className={`h-full rounded-full ${bWins ? colorB : "opacity-20 bg-outline"}`}
                               />
                             </div>
-                            <span className={`font-display font-black text-base ${bWins ? "text-white" : "text-on-surface-variant/50"}`}>{b}{suffix}</span>
+                            <span className={`font-display font-black text-sm sm:text-base ${bWins ? "text-white" : "text-on-surface-variant/50"}`}>{b}{suffix}</span>
                           </div>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-
-                {(() => {
-                  const scores = [0, 0];
-                  [
-                    { key: "wins",     higher: true  },
-                    { key: "win_rate", higher: true  },
-                    { key: "Points",   higher: true  },
-                    { key: "losses",   higher: false },
-                  ].forEach(({ key, higher }) => {
-                    const a = compareData[0][key as keyof Player] as number;
-                    const b = compareData[1][key as keyof Player] as number;
-                    if (higher ? a > b : a < b) scores[0]++;
-                    else if (higher ? b > a : b < a) scores[1]++;
-                  });
-                  const winnerIdx = scores[0] > scores[1] ? 0 : scores[1] > scores[0] ? 1 : -1;
-                  if (winnerIdx === -1) return null;
-                  const winner = compareData[winnerIdx];
-                  return (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 }}
-                      className="mt-5 flex items-center justify-center gap-2 py-3 rounded-xl bg-surface-container border border-outline-variant/20"
-                    >
-                      <Trophy size={14} className="text-yellow-400" />
-                      <span className="font-display font-black text-white text-xs uppercase tracking-wider">
-                        {winner.name.split(" ")[0]} leads overall
-                      </span>
-                      <span className="text-[10px] text-on-surface-variant font-display">
-                        ({scores[winnerIdx]}–{scores[1 - winnerIdx]} stats)
-                      </span>
-                    </motion.div>
-                  );
-                })()}
               </div>
             )}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Table */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-        className="rounded-xl border border-outline-variant/20 overflow-hidden mb-4">
+      {/* Main Content Area */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-4">
+        {visible.length === 0 ? (
+          <div className="py-12 text-center text-on-surface-variant font-display text-sm bg-surface-container rounded-xl border border-outline-variant/20">
+            No players found.
+          </div>
+        ) : (
+          <>
+            {/* 📱 MOBILE CARD VIEW (< md) */}
+            <div className="md:hidden space-y-2.5">
+              <AnimatePresence>
+                {visible.map((p, i) => {
+                  const isSelected = compareIds.includes(p.id);
+                  return (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.25, delay: i * 0.03 }}
+                      onClick={() => toggleCompare(p.id)}
+                      className={`p-3.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+                        isSelected
+                          ? "bg-primary/10 border-primary"
+                          : "bg-surface-container-low border-outline-variant/20 hover:border-outline-variant/40"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`font-display font-black text-base w-5 text-center shrink-0 ${medals[p.rank] ?? "text-on-surface-variant"}`}>
+                          {p.rank}
+                        </span>
 
-        {/* Header row */}
-        <div className="grid grid-cols-[2rem_1fr_4rem_3rem_3rem_5rem_3rem_2.5rem] gap-2 px-4 py-3 bg-surface-container-high border-b border-outline-variant/20">
-          {["#", "Player", "Played", "W", "L", "Win %", "Pts", "±"].map((h) => (
-            <span key={h} className="text-[10px] font-display font-black uppercase tracking-[0.15em] text-on-surface-variant">{h}</span>
-          ))}
-        </div>
+                        <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-display font-black text-white text-xs ${
+                          p.rank === 1 ? "bg-yellow-400/20 ring-1 ring-yellow-400/50" :
+                          p.rank === 2 ? "bg-slate-300/20 ring-1 ring-slate-300/30" :
+                          p.rank === 3 ? "bg-amber-500/20 ring-1 ring-amber-500/30" :
+                          "bg-surface-container-highest"
+                        }`}>
+                          {initials(p.name)}
+                        </div>
 
-        <AnimatePresence>
-          {visible.length === 0 ? (
-            <div className="py-12 text-center text-on-surface-variant font-display text-sm">No players found.</div>
-          ) : (
-            visible.map((p, i) => {
-              const isSelected = compareIds.includes(p.id);
-              return (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                  onClick={() => toggleCompare(p.id)}
-                  className={`grid grid-cols-[2rem_1fr_4rem_3rem_3rem_5rem_3rem_2.5rem] gap-2 px-4 py-3.5 items-center border-b border-outline-variant/10 last:border-0 cursor-pointer transition-all duration-150 ${
-                    isSelected ? "bg-primary/10 border-l-2 border-l-primary" : "hover:bg-surface-container"
-                  }`}
-                >
-                  <span className={`font-display font-black text-sm ${medals[p.rank] ?? "text-on-surface-variant"}`}>{p.rank}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-display font-bold text-sm text-white truncate">{p.name}</p>
+                            <Trend curr={p.rank} prev={p.prev_rank} />
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] font-display font-bold text-amber-400 uppercase tracking-wider">{p.elo} ELO</span>
+                            {p.rank <= 3 && (
+                              <span className={`text-[9px] font-display uppercase tracking-wider ${medals[p.rank]}`}>
+                                {p.rank === 1 ? "🥇 Gold" : p.rank === 2 ? "🥈 Silver" : "🥉 Bronze"}
+                              </span>
+                            )}
+                          </div>
+                        </div>
 
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center font-display font-black text-white text-xs ${
-                      p.rank === 1 ? "bg-yellow-400/20 ring-1 ring-yellow-400/50" :
-                      p.rank === 2 ? "bg-slate-300/20 ring-1 ring-slate-300/30" :
-                      p.rank === 3 ? "bg-amber-500/20 ring-1 ring-amber-500/30" :
-                      "bg-surface-container-highest"
-                    }`}>
-                      {initials(p.name)}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-display font-bold text-sm text-white truncate">{p.name}</p>
-                      {p.rank <= 3 && (
-                        <p className={`text-[9px] font-display uppercase tracking-wider ${medals[p.rank]}`}>
-                          {p.rank === 1 ? "🥇 Gold" : p.rank === 2 ? "🥈 Silver" : "🥉 Bronze"}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                        <div className="text-right shrink-0">
+                          <p className="font-display font-black text-sm text-secondary">{p.Points} <span className="text-[10px] font-normal text-on-surface-variant">PTS</span></p>
+                        </div>
+                      </div>
 
-                  <span className="font-display font-bold text-sm text-on-surface-variant text-center">{p.matches}</span>
-                  <span className="font-display font-bold text-sm text-emerald-400 text-center">{p.wins}</span>
-                  <span className="font-display font-bold text-sm text-red-400 text-center">{p.losses}</span>
+                      <div className="mt-3 pt-2.5 border-t border-outline-variant/10 flex items-center justify-between text-xs font-display">
+                        <div className="flex items-center gap-3">
+                          <span className="text-on-surface-variant"><strong className="text-white font-bold">{p.matches}</strong> M</span>
+                          <span className="text-emerald-400"><strong className="font-bold">{p.wins}</strong> W</span>
+                          <span className="text-red-400"><strong className="font-bold">{p.losses}</strong> L</span>
+                        </div>
 
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${p.win_rate}%` }}
-                        transition={{ duration: 0.7, delay: 0.1 + i * 0.03, ease: "easeOut" }}
-                        className={`h-full rounded-full ${
-                          p.rank === 1 ? "bg-yellow-400" :
-                          p.rank === 2 ? "bg-slate-300" :
-                          p.rank === 3 ? "bg-amber-500" :
-                          "bg-primary"
-                        }`}
-                      />
-                    </div>
-                    <span className="text-[10px] font-display font-bold text-on-surface-variant w-7 shrink-0 text-right">{p.win_rate}%</span>
-                  </div>
+                        <div className="flex items-center gap-2 w-28">
+                          <div className="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${p.win_rate}%` }}
+                              transition={{ duration: 0.7, delay: 0.1 + i * 0.03, ease: "easeOut" }}
+                              className={`h-full rounded-full ${
+                                p.rank === 1 ? "bg-yellow-400" :
+                                p.rank === 2 ? "bg-slate-300" :
+                                p.rank === 3 ? "bg-amber-500" :
+                                "bg-primary"
+                              }`}
+                            />
+                          </div>
+                          <span className="text-[10px] font-bold text-on-surface-variant w-8 text-right shrink-0">{p.win_rate}%</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
 
-                  <span className="font-display font-bold text-sm text-secondary text-center">{p.Points}</span>
+            {/* 🖥️ DESKTOP TABLE VIEW (≥ md) */}
+            <div className="hidden md:block rounded-xl border border-outline-variant/20 overflow-hidden">
+              <div className="grid grid-cols-[2rem_1fr_4rem_4rem_3rem_3rem_5rem_3rem_2.5rem] gap-2 px-4 py-3 bg-surface-container-high border-b border-outline-variant/20">
+                {["#", "Player", "Elo", "Played", "W", "L", "Win %", "Pts", "±"].map((h) => (
+                  <span key={h} className={`text-[10px] font-display font-black uppercase tracking-[0.15em] ${h === "Elo" ? "text-amber-400 text-center" : "text-on-surface-variant"}`}>{h}</span>
+                ))}
+              </div>
 
-                  <div className="flex justify-center">
-                    <Trend curr={p.rank} prev={p.prev_rank} />
-                  </div>
-                </motion.div>
-              );
-            })
-          )}
-        </AnimatePresence>
+              <AnimatePresence>
+                {visible.map((p, i) => {
+                  const isSelected = compareIds.includes(p.id);
+                  return (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.25, delay: i * 0.03 }}
+                      onClick={() => toggleCompare(p.id)}
+                      className={`grid grid-cols-[2rem_1fr_4rem_4rem_3rem_3rem_5rem_3rem_2.5rem] gap-2 px-4 py-3.5 items-center border-b border-outline-variant/10 last:border-0 cursor-pointer transition-all duration-150 ${
+                        isSelected ? "bg-primary/10 border-l-2 border-l-primary" : "hover:bg-surface-container"
+                      }`}
+                    >
+                      <span className={`font-display font-black text-sm ${medals[p.rank] ?? "text-on-surface-variant"}`}>{p.rank}</span>
+
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center font-display font-black text-white text-xs ${
+                          p.rank === 1 ? "bg-yellow-400/20 ring-1 ring-yellow-400/50" :
+                          p.rank === 2 ? "bg-slate-300/20 ring-1 ring-slate-300/30" :
+                          p.rank === 3 ? "bg-amber-500/20 ring-1 ring-amber-500/30" :
+                          "bg-surface-container-highest"
+                        }`}>
+                          {initials(p.name)}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-display font-bold text-sm text-white truncate">{p.name}</p>
+                          {p.rank <= 3 && (
+                            <p className={`text-[9px] font-display uppercase tracking-wider ${medals[p.rank]}`}>
+                              {p.rank === 1 ? "🥇 Gold" : p.rank === 2 ? "🥈 Silver" : "🥉 Bronze"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Elo Column */}
+                      <span className="font-display font-bold text-sm text-amber-400 text-center">{p.elo}</span>
+
+                      <span className="font-display font-bold text-sm text-on-surface-variant text-center">{p.matches}</span>
+                      <span className="font-display font-bold text-sm text-emerald-400 text-center">{p.wins}</span>
+                      <span className="font-display font-bold text-sm text-red-400 text-center">{p.losses}</span>
+
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${p.win_rate}%` }}
+                            transition={{ duration: 0.7, delay: 0.1 + i * 0.03, ease: "easeOut" }}
+                            className={`h-full rounded-full ${
+                              p.rank === 1 ? "bg-yellow-400" :
+                              p.rank === 2 ? "bg-slate-300" :
+                              p.rank === 3 ? "bg-amber-500" :
+                              "bg-primary"
+                            }`}
+                          />
+                        </div>
+                        <span className="text-[10px] font-display font-bold text-on-surface-variant w-7 shrink-0 text-right">{p.win_rate}%</span>
+                      </div>
+
+                      <span className="font-display font-bold text-sm text-secondary text-center">{p.Points}</span>
+
+                      <div className="flex justify-center">
+                        <Trend curr={p.rank} prev={p.prev_rank} />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          </>
+        )}
       </motion.div>
 
-      {/* ── SHOW MORE BUTTON ── */}
+      {/* Show More */}
       {hasMore && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center mb-4">
           <button
-            onClick={() => setVisibleCount((c) => c + 10)}
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
             className="group flex items-center gap-2 px-6 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:text-white hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 font-display font-bold text-xs uppercase tracking-wider"
           >
             <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform duration-200" />
@@ -537,9 +599,10 @@ export default function EightBallLeaderboard() {
         </motion.div>
       )}
 
+      {/* Refresh */}
       <div className="flex justify-center mb-8">
         <button
-          onClick={() => load(true)}
+          onClick={handleRefreshClick}
           disabled={refreshing}
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-surface-container border border-outline-variant/20 text-on-surface-variant hover:text-white transition-colors font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50"
         >

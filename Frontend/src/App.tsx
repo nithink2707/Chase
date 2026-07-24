@@ -7,7 +7,7 @@ import TournamentDetails from "./pages/TournamentDetails";
 import TeamManagement from "./pages/TeamManagement";
 import EightBallLeaderboard from "./pages/EightBallLeaderboard";
 import Profile from "./pages/Profile";
-import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
+import { User as LucideUser, Trophy, ArrowRight, Sparkles, Loader2, Menu, X, Search, LogOut, Bell, Settings, Instagram} from "lucide-react";
 const API_URL = "https://chase-l9no.onrender.com"
 const AuthContext = createContext();
 
@@ -92,6 +92,7 @@ export function Main() {
 export function Intro() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [loginInput, setLoginInput] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -188,11 +189,42 @@ const createAccount = async () => {
   return (
     <div className="bg-background min-h-screen overflow-hidden relative">
       {/* Header */}
-      <header className="h-16 flex items-center justify-between px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
+      {/* Header */}
+      <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-[#1A1A1A] border-b border-outline-variant/20 sticky top-0 z-30">
         <div className="flex items-center gap-4 flex-1">
-          <img src="/chasewhite.png" alt="Chase" className="h-7" />
+          <img src="/chasewhite.png" alt="Chase" className="h-6 sm:h-7" />
         </div>
+
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="sm:hidden p-2 text-on-surface-variant hover:text-white"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </header>
+
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="sm:hidden fixed inset-x-0 top-16 bg-[#1A1A1A] border-b border-outline-variant/20 p-4 z-20 flex flex-col gap-3 shadow-xl"
+          >
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleDashboardClick();
+              }}
+              className="w-full py-3 bg-white text-background font-display font-bold rounded-xl uppercase text-xs tracking-wider"
+            >
+              Join the Community
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Animated background orbs */}
       <div className="absolute inset-0 pointer-events-none">
@@ -334,7 +366,7 @@ const createAccount = async () => {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
             >
-              <div className="w-full max-w-sm bg-[#1A1A1A] rounded-2xl border border-outline-variant/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] p-8 pointer-events-auto relative overflow-hidden">
+             <div className="w-full max-w-sm max-h-[90vh] overflow-y-auto bg-[#1A1A1A] rounded-2xl border border-outline-variant/20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] p-5 sm:p-8 pointer-events-auto relative">
 
                 <AnimatePresence mode="wait">
                   {isRedirecting ? (
