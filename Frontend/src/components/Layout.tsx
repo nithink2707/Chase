@@ -23,9 +23,9 @@ interface LayoutProps {
 
 const navItems = [
   { icon: Trophy,  label: "Tournaments", path: "/tournaments" },
-  { icon: Target,  label: "Leaderboard", path: "/leaderboard/8ball" },
-  { icon: Users,   label: "Teams",       path: "/teams" },
-  { icon: Activity,label: "Activity",    path: "/activity" },
+  { icon: Target,  label: "Leaderboard", path: "/leaderboard/8ball" }
+  // { icon: Users,   label: "Teams",       path: "/teams" },
+  // { icon: Activity,label: "Activity",    path: "/activity" },
 ];
 
 
