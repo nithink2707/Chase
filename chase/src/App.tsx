@@ -359,7 +359,7 @@ if (step === "select") {
         </div>
 
         {/* Score panels */}
-        <div className="flex gap-4 mb-6">
+        <div className="flex flex-col gap-4 mb-6 md:flex-row">
           <ScorePanel player={p1!} score={scores[0]} onAction={(d, l) => handleAction(0, d, l)} disabled={submitting} />
 
           <div className="flex flex-col items-center justify-center gap-2 px-1">
@@ -447,7 +447,7 @@ if (step === "select") {
       </div>
 
       {/* Rating changes */}
-      <div className="w-full grid grid-cols-2 gap-3">
+      <div className="w-full grid grid-cols-1 gap-3 md:grid-cols-2">
         {[p1!, p2!].map((player, i) => {
           const delta = result?.ratingDeltas[i] ?? 0;
           return (
