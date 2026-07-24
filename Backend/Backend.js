@@ -103,5 +103,10 @@ app.post('/api/match',async (req,res) => {
     return res.json({message:"Rating updated"});
 })
 
+app.get('/api/stats',async (req,res) => {
+    const conn = await pool.connect()
+    const data = await pool.query("SELECT id,name,rating,points FROM stats");
+    return res.json(data);
+})
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

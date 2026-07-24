@@ -16,12 +16,44 @@ export interface Player {
   rank: number;
   prev_rank: number;
   name: string;
-  elo: number; // Added Elo field
+  elo: number;
   matches: number;
   wins: number;
   losses: number;
   win_rate: number;
   Points: number;
+}
+
+type ApiPlayer = {
+  id: string | number;
+  name: string;
+  elo: number;
+  points: number;
+};
+
+async function getData(): Promise<ApiPlayer[]> {
+  const res = await fetch("https://chase-l9no.onrender.com/api/stats");
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch leaderboard data");
+  }
+
+  return res.json();
+}
+
+function mapToPlayer(row: ApiPlayer, index: number): Player {
+  return {
+    id: String(row.id),
+    rank: index + 1,
+    prev_rank: index + 1,
+    name: row.name,
+    elo: row.elo,
+    matches: 0,
+    wins: 0,
+    losses: 0,
+    win_rate: 0,
+    Points: row.points,
+  };
 }
 
 // ── PROPS FOR DYNAMIC DATABASE DATA ──
@@ -34,6 +66,7 @@ interface LeaderboardProps {
 
 async function fetchMockLeaderboard(filter: "tournament" | "yearly" | "alltime"): Promise<Player[]> {
   await new Promise((r) => setTimeout(r, 600));
+  const players = await getData();
 
   const tournament: Player[] = [
     { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",    elo: 1850, matches: 38, wins: 31, losses: 7,  win_rate: 81.6, Points: 162 },
@@ -108,8 +141,8 @@ export default function EightBallLeaderboard({
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const data = await fetchMockLeaderboard(timeFilter);
-      setInternalPlayers(data);
+      const data = await getData();
+      setInternalPlayers(data.map(mapToPlayer));
       setLastUpdated(new Date());
       setVisibleCount(INITIAL_VISIBLE);
     } finally {
