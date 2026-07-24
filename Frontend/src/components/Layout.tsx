@@ -150,7 +150,7 @@ export default function Layout({ children }: LayoutProps) {
             );
           })}
 
-          <Link
+          {/* <Link
             to="/profile"
             onClick={() => setMobileDrawerOpen(false)}
             className={cn(
@@ -162,7 +162,7 @@ export default function Layout({ children }: LayoutProps) {
           >
             <User size={20} className={location.pathname === "/profile" ? "text-primary" : "text-on-surface-variant"} />
             Profile
-          </Link>
+          </Link> */}
         </nav>
 
         <div className="p-4 border-t border-outline-variant/10">
