@@ -64,37 +64,6 @@ interface LeaderboardProps {
   onFilterChange?: (filter: "tournament" | "yearly" | "alltime") => void;
 }
 
-async function fetchMockLeaderboard(filter: "tournament" | "yearly" | "alltime"): Promise<Player[]> {
-  await new Promise((r) => setTimeout(r, 600));
-  const players = await getData();
-
-  const tournament: Player[] = [
-    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",    elo: 1850, matches: 38, wins: 31, losses: 7,  win_rate: 81.6, Points: 162 },
-    { id: "2",  rank: 2,  prev_rank: 4,  name: "Nithin R.",       elo: 1790, matches: 35, wins: 28, losses: 7,  win_rate: 80.0, Points: 160 },
-    { id: "3",  rank: 3,  prev_rank: 2,  name: "Karan Verma",     elo: 1740, matches: 40, wins: 31, losses: 9,  win_rate: 77.5, Points: 155 },
-    { id: "4",  rank: 4,  prev_rank: 3,  name: "Priya Nair",      elo: 1680, matches: 33, wins: 25, losses: 8,  win_rate: 75.8, Points: 152 },
-    { id: "5",  rank: 5,  prev_rank: 5,  name: "Dev Rathore",     elo: 1620, matches: 29, wins: 21, losses: 8,  win_rate: 72.4, Points: 148 },
-    { id: "6",  rank: 6,  prev_rank: 7,  name: "Rohan Gupta",     elo: 1580, matches: 28, wins: 20, losses: 8,  win_rate: 71.4, Points: 140 },
-    { id: "7",  rank: 7,  prev_rank: 6,  name: "Sneha Kapoor",    elo: 1530, matches: 31, wins: 21, losses: 10, win_rate: 67.7, Points: 135 },
-    { id: "8",  rank: 8,  prev_rank: 9,  name: "Vikram Shah",     elo: 1490, matches: 27, wins: 18, losses: 9,  win_rate: 66.6, Points: 130 },
-    { id: "9",  rank: 9,  prev_rank: 8,  name: "Ananya Roy",      elo: 1450, matches: 25, wins: 16, losses: 9,  win_rate: 64.0, Points: 125 },
-    { id: "10", rank: 10, prev_rank: 10, name: "Kabir Sharma",    elo: 1410, matches: 24, wins: 15, losses: 9,  win_rate: 62.5, Points: 120 },
-    { id: "11", rank: 11, prev_rank: 12, name: "Siddharth Rao",   elo: 1380, matches: 22, wins: 13, losses: 9,  win_rate: 59.0, Points: 115 },
-    { id: "12", rank: 12, prev_rank: 11, name: "Tanya Sen",       elo: 1320, matches: 20, wins: 11, losses: 9,  win_rate: 55.0, Points: 110 }
-  ];
-
-  const yearly: Player[] = [
-    { id: "3",  rank: 1,  prev_rank: 2,  name: "Karan Verma",     elo: 2100, matches: 98, wins: 74, losses: 24, win_rate: 75.5, Points: 370 },
-    { id: "1",  rank: 2,  prev_rank: 1,  name: "Arjun Mehta",     elo: 2050, matches: 90, wins: 67, losses: 23, win_rate: 74.4, Points: 362 },
-  ];
-
-  const alltime: Player[] = [
-    { id: "1",  rank: 1,  prev_rank: 1,  name: "Arjun Mehta",     elo: 2400, matches: 320, wins: 255, losses: 65,  win_rate: 79.7, Points: 1280 },
-    { id: "3",  rank: 2,  prev_rank: 3,  name: "Karan Verma",     elo: 2350, matches: 310, wins: 238, losses: 72,  win_rate: 76.8, Points: 1190 },
-  ];
-
-  return filter === "yearly" ? yearly : filter === "alltime" ? alltime : tournament;
-}
 
 const medals: Record<number, string> = { 1: "text-yellow-400", 2: "text-slate-300", 3: "text-amber-500" };
 
