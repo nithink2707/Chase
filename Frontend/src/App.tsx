@@ -230,20 +230,12 @@ const createAccount = async () => {
       {/* Animated background orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
-          animate={{ scale: [1, 1.4, 1], opacity: [0.15, 0.3, 0.15] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] bg-primary rounded-full blur-[140px]"
-        />
-        {/* <motion.div
-          animate={{ scale: [1.3, 1, 1.3], opacity: [0.15, 0.3, 0.15] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-          className="absolute bottom-[-15%] right-[-10%] w-[55%] h-[55%] bg-secondary rounded-full blur-[140px]"
-        />
-        <motion.div
-          animate={{ x: ["-100%", "200%"] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-          className="absolute top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-primary/60 to-transparent rotate-12"
-        /> */}
+    initial={{ opacity: 0.06, scale: 0.98 }}
+    animate={{ opacity: 0.12, scale: 1.02 }}
+    transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+    className="absolute left-[-10%] top-[-15%] h-[45vw] w-[45vw] max-w-[420px] max-h-[420px] rounded-full bg-primary/40"
+    style={{ filter: "blur(50px)" }}
+  />
       </div>
 
       {/* Marquee strip */}
