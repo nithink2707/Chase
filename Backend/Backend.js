@@ -98,7 +98,7 @@ app.post('/api/match',async (req,res) => {
     const {player1_id,player2_id,p1_points,p2_points,winner_id,new_rating_p1,new_rating_p2,p1phone,p2phone} = req.body
     const conn = await pool.connect()
     await pool.query("UPDATE stats set points=$1,rating=$2 WHERE phone=$3",[p1_points,new_rating_p1,p1phone]);
-    await pool.query("UPDATE users set points=$1,rating=$2 WHERE phone=$3",[p2_points,new_rating_p2,p2phone]);
+    await pool.query("UPDATE users set rating=$2 WHERE phone=$3",[new_rating_p2,p2phone]);
     await conn.release()
     return res.json({message:"Rating updated"});
 })
