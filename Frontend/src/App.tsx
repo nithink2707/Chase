@@ -228,13 +228,13 @@ const createAccount = async () => {
       </AnimatePresence>
 
       {/* Animated background orbs */}
-      {/* <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none">
         <motion.div
           animate={{ scale: [1, 1.4, 1], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] bg-primary rounded-full blur-[140px]"
         />
-        <motion.div
+        {/* <motion.div
           animate={{ scale: [1.3, 1, 1.3], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
           className="absolute bottom-[-15%] right-[-10%] w-[55%] h-[55%] bg-secondary rounded-full blur-[140px]"
@@ -243,8 +243,8 @@ const createAccount = async () => {
           animate={{ x: ["-100%", "200%"] }}
           transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
           className="absolute top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-primary/60 to-transparent rotate-12"
-        />
-      </div> */}
+        /> */}
+      </div>
 
       {/* Marquee strip */}
       <div className="relative z-10 border-y border-outline-variant/20 overflow-hidden py-2 bg-surface-container/50 backdrop-blur-sm">
