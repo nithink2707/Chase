@@ -110,7 +110,8 @@ export default function EightBallLeaderboard({
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const data = await getData();
+      const f = await getData();
+      const data  = f.sort((a,b) => b.rating-a.rating);
       setInternalPlayers(data.map(mapToPlayer));
       setLastUpdated(new Date());
       setVisibleCount(INITIAL_VISIBLE);
