@@ -134,6 +134,20 @@ export default function MatchScorer() {
       .catch(() => { setError("Failed to load players."); setLoading(false); });
   }, []);
 
+  useEffect(async (p1,p2) => {
+    const score = await fetch(`${API_URL}/api/points`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          p1phone:   p1.phone,
+          p2phone:   p2.phone,
+           }),
+      });
+      setScores(score)
+
+  }, []); 
+
   const handleAction = (playerIdx: 0 | 1, delta: number, label: string) => {
     setScores((prev) => {
       const next = [...prev];

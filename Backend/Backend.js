@@ -106,6 +106,7 @@ app.post('/api/match',async (req,res) => {
 app.get('/api/stats',async (req,res) => {
     const conn = await pool.connect()
     const data = await pool.query("SELECT id,name,rating,points FROM stats");
+    await conn.release();
     return res.json(data.rows);
 })
 const PORT = process.env.PORT || 8080;
